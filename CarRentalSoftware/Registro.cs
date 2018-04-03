@@ -12,5 +12,8 @@ namespace CarRentalSoftware
         Cliente cliente;
         Vehiculos vehiculo;
         List<Accesorios> accesorios;
+        DateTime fecha;
+        DateTime TerminoContrato;
+        float TotalPrecio;
     }
 }
