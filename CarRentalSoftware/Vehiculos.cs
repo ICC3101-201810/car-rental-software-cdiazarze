@@ -10,10 +10,12 @@ namespace CarRentalSoftware
     {
         string tipo;
         string patente;
+        float precioarriendo;
         
-        public Vehiculos(string miTipo)
+        public Vehiculos(string miTipo, float miPrecioArriendo)
         {
             tipo = miTipo;
+            precioarriendo = miPrecioArriendo;
         }
         public string Tipo
         {

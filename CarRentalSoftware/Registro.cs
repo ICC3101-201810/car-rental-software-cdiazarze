@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace CarRentalSoftware
 {
-    Cliente cliente;
-
+    
     class Registro
     {
+        Cliente cliente;
+        Vehiculos vehiculo;
+        List<Accesorios> accesorios;
     }
 }

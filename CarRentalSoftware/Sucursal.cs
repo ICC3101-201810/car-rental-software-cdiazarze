@@ -10,7 +10,11 @@ namespace CarRentalSoftware
     {
         List<Vehiculos> Vehiculos= new List<Vehiculos>();
         List<Accesorios> Accesorios = new List<Accesorios>();
+        List<Clientes> Clientes = new List<Clientes>();
+        List<Registro> Registros = new List<Registro>();
+
         int capacidad;
+        string nombre; 
 
         public Sucursal(int miCapacidad)
         {
@@ -27,6 +31,17 @@ namespace CarRentalSoftware
             else
             {
                 return false;
+            }
+        }
+        public string Nombre
+        {
+            get
+            {
+                return this.nombre;
+            }
+            set
+            {
+                this.nombre = value;
             }
         }
     }
