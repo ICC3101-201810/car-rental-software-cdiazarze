@@ -18,24 +18,24 @@ namespace CarRentalSoftware
             Sucursal sucursal;
             Console.WriteLine("Inicio Programa\n");
             Console.WriteLine("Creacion de sucursal:\n Ingrese nombre de la sucursal:");
-            CapacidadSucursal = Console.Read();
+            Int32.Parse(Console.ReadLine(), CapacidadSucursal);
             Console.WriteLine("Creacion de Sucursal:\n Ingrese Nombre de sucursal:");
             NombreSucursal = Console.ReadLine();
             sucursal = new Sucursal(CapacidadSucursal, NombreSucursal);
 
             Sucursales.Add(sucursal);
+            Console.WriteLine("Sucursal creada, ahora puede decidir que realizar a continuacion:\n(1) Crear Sucursal\n" +
+                "(2) Agregar Vehiculo a Sucursal\n(3) Gestionar Arriendo\n(4) Salir");
 
             while (true) {
-                Console.WriteLine("Sucursal creada, ahora puede decidir que realizar a continuacion:\n(1) Crear Sucursal\n" +
-                    "(2) Agregar Vehiculo a Sucursal\n(3) Gestionar Arriendo\n(4) Salir");
-                decision = Console.Read();
+                decision = Int32.Parse(Console.ReadLine());
 
                 if (decision == 1)
                 {
                     Console.WriteLine("Creacion de Sucursal:\n Ingrese Nombre de sucursal:");
                     NombreSucursal = Console.ReadLine();
                     Console.WriteLine("\n Ingrese Capacidad de sucursal:");
-                    CapacidadSucursal = (int)Console.Read();
+                    CapacidadSucursal = Int32.Parse(Console.ReadLine());
                     sucursal = new Sucursal(CapacidadSucursal, NombreSucursal);
                     Sucursales.Add(sucursal);
                 }
@@ -48,6 +48,7 @@ namespace CarRentalSoftware
             }
             Console.WriteLine(Sucursales[0].Nombre);
             Console.WriteLine(Sucursales[1].Nombre);
+            Console.Read();
         }
     }
 }
