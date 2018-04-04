@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CarRentalSoftware
 {
-    class Program
+    public class MaquinariaPesada: Vehiculos
     {
-        
-        static void Main(string[] args)
+        public MaquinariaPesada()
         {
-           
+            tipo = "MaquinariaPesada";
+            precioarriendo = 1000;
         }
     }
 }

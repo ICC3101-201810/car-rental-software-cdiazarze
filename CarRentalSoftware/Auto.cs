@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CarRentalSoftware
 {
-    class Program
+    class Auto : Vehiculos
     {
-        
-        static void Main(string[] args)
+        public Auto()
         {
-           
+            tipo = "Auto";
+            precioarriendo = 400;
         }
     }
 }

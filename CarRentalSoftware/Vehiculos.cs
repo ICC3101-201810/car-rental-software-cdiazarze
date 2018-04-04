@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace CarRentalSoftware
 {
-    class Vehiculos
+    public abstract class Vehiculos
     {
-        string tipo;
-        string patente;
-        float precioarriendo;
-        
-        public Vehiculos(string miTipo, float miPrecioArriendo)
+        protected string tipo;
+        protected float precioarriendo;
+
+        public Vehiculos()
         {
-            tipo = miTipo;
-            precioarriendo = miPrecioArriendo;
-        }
+        } 
+
         public string Tipo
         {
             get
@@ -26,6 +24,17 @@ namespace CarRentalSoftware
             set
             {
                 this.tipo = value;
+            }
+        }
+        public float PrecioArriendo
+        {
+            get
+            {
+                return this.precioarriendo;
+            }
+            set
+            {
+                this.precioarriendo = value;
             }
         }
     }
