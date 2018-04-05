@@ -8,38 +8,17 @@ namespace CarRentalSoftware
 {
     public abstract class Cliente
     {
-        string rut;
-        float id;
+        string Rut;
+        float Id;
         protected Random rand =new Random();
 
         public Cliente(string miRut, float miID)
         {
-            rut = miRut;
-             id = miID;
+            Rut = miRut;
+             Id = miID;
 
         }
-        public string Rut
-        {
-            get
-            {
-                return this.rut;
-            }
-            set
-            {
-                this.rut = value;
-            }
-        }
-        public float ID
-        {
-            get
-            {
-                return this.id;
-            }
-            set
-            {
-                this.id = value;
-            }
-        }
-
+        public string rut { get; }
+        public float id { get; }
     }
 }

@@ -8,53 +8,44 @@ namespace CarRentalSoftware
 {
     class Sucursal
     {
-        List<Vehiculos> Vehiculos= new List<Vehiculos>();
-        List<Accesorios> Accesorios = new List<Accesorios>();
-        List<Cliente> Clientes = new List<Cliente>();
-        List<Registro> Registros = new List<Registro>();
+        Dictionary<float, int> stockvehiculos= new Dictionary<float, int>();
+        Dictionary<float, Vehiculos> vehiculos = new Dictionary<float, Vehiculos>();
+        List<Accesorios> accesorios = new List<Accesorios>();
 
-        int capacidad;
-        string nombre; 
+        float id;
 
-        public Sucursal(int miCapacidad, string miNombre)
+        public Sucursal(float miId)
         {
-            capacidad = miCapacidad;
-            nombre = miNombre;
+            id = miId;
         }
 
-        public bool AgregarVehiculos(Vehiculos vehiculo)
+
+        public bool AumentarFlota(string tipo, int cantidad)
         {
-            if (capacidad > 0)
+            foreach (float i in vehiculos.Keys)
             {
-                Vehiculos.Add(vehiculo);
-                return true;
+                if (vehiculos[i].Tipo.Equals(tipo))
+                {
+                    stockvehiculos[i] = cantidad;
+                    return true;
+                }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
-        public string Nombre
+
+        public bool ComprarVehiculo(string tipo, float precioarriendo)
         {
-            get
+            foreach (float i in vehiculos.Keys)
             {
-                return this.nombre;
+                if (vehiculos[i].Tipo.Equals(tipo)) return false;
             }
-            set
-            {
-                this.nombre = value;
-            }
+            vehiculos.Add(vehiculos.Count + 1, new Vehiculos(tipo, precioarriendo));
+            stockvehiculos.Add(vehiculos.Count, 1);
+            return true;
         }
-        public int Capacidad
-        {
-            get
-            {
-                return this.capacidad;
-            }
-            set
-            {
-                this.capacidad = value;
-            }
-        }
+
+        public float Id { get; }
+        public Dictionary<float,int> StockVehiculos { get; set; }
+        public Dictionary<float, Vehiculos> Vehiculos { get; set; }
     }
 }
