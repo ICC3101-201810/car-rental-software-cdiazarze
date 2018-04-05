@@ -22,7 +22,7 @@ namespace CarRentalSoftware
         {
             if (!sucursales.ContainsKey(1)) sucursales.Add(1, new Sucursal(1));
             else sucursales.Add(sucursales.Count + 1, new Sucursal(sucursales.Count + 1));
-            Console.WriteLine("Sucursal Id:" + sucursales.Count + " creada.");
+            Console.WriteLine("Sucursal Id:" + sucursales.Count + " creada.\n");
         }
         public int ArrendarVehiculo(float idSucursal, string tipo, Cliente cliente, DateTime termino) 
         {
@@ -34,12 +34,12 @@ namespace CarRentalSoftware
             }
             veh = sucursales[idSucursal].Vehiculos[i];
             if (!sucursales.ContainsKey(idSucursal)) return 0;
-            if (sucursales[idSucursal].StockVehiculos[i] < 1) return 1;
+            if (sucursales[idSucursal].Stockvehiculos[i] < 1) return 1;
             
 
-            sucursales[idSucursal].StockVehiculos[i] -= 1;
+            sucursales[idSucursal].Stockvehiculos[i] -= 1;
             
-            float totalprecio = veh.PrecioArriendo;
+            float totalprecio = veh.Precioarriendo;
             List<Accesorios> accesorios = new List<Accesorios>();
             registros.Add(registros.Count + 1, new Registro(cliente, veh, accesorios, termino, totalprecio));
             return 2;
@@ -47,41 +47,76 @@ namespace CarRentalSoftware
 
         public void VerStockVehiculosSucursal(float idSucursal)
         {
-            foreach (float i in sucursales[idSucursal].StockVehiculos.Keys)
+            foreach (float i in sucursales[idSucursal].Stockvehiculos.Keys)
             {
-                Console.WriteLine(sucursales[idSucursal].Vehiculos[i].Tipo + ": " + sucursales[idSucursal].StockVehiculos[i]);
+                Console.WriteLine(sucursales[idSucursal].Vehiculos[i].Tipo + ": " + sucursales[idSucursal].Stockvehiculos[i]);
+            }
+        }
+
+        public void ImprimirSucursales()
+        {
+            foreach (float i in sucursales.Keys)
+            {
+                Console.WriteLine("(" + i + ") Sucursal " + sucursales[i].Id+"\n");
             }
         }
 
         public void programa()
         {
-            int decision;
+            int decision0;
+            int decision2;
+            Console.WriteLine("Creando sucursal inicial...");
             CrearSucursal();
+            Console.WriteLine("Agregando vehiculos...");
+            sucursales[1].ComprarVehiculo("Auto", 400);
+            sucursales[1].AumentarFlota("Auto", 14);
+            sucursales[1].ComprarVehiculo("Camioneta", 500);
+            sucursales[1].AumentarFlota("Camioneta", 17);
+            sucursales[1].ComprarVehiculo("Acuatico", 600);
+            sucursales[1].AumentarFlota("Acuatico", 8);
+            sucursales[1].ComprarVehiculo("Bus", 800);
+            sucursales[1].AumentarFlota("Bus", 3);
+            sucursales[1].ComprarVehiculo("MaquinariaPesada", 1000);
+            sucursales[1].AumentarFlota("MaquinariaPesada", 2);
+            sucursales[1].ComprarVehiculo("Moto", 300);
+            sucursales[1].AumentarFlota("Moto", 13);
 
-            //Console.WriteLine("Sucursal creada, ahora puede decidir que realizar a continuacion:\n(1) Crear Sucursal\n" +
-               // "(2) Agregar Vehiculo a Sucursal\n(3) Gestionar Arriendo\n(4) Salir");
-/*
+
+
+            Console.WriteLine("Sucursal incializada, ahora puede decidir que realizar a continuacion:\n");
             while (true)
             {
-                decision = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Menu:\n(1) Crear Nueva Sucursal\n" +"(2) Agregar Vehiculo a Sucursal\n(3) Gestionar Arriendo\n(4) Salir\n");
 
-                if (decision == 1)
+                decision0 = Int32.Parse(Console.ReadLine());
+
+                if (decision0 == 1)
                 {
-                    Console.WriteLine("Creacion de Sucursal:\n Ingrese Nombre de sucursal:");
-                    NombreSucursal = Console.ReadLine();
-                    Console.WriteLine("\n Ingrese Capacidad de sucursal:");
-                    CapacidadSucursal = Int32.Parse(Console.ReadLine());
-                    sucursal = new Sucursal( NombreSucursal);
-                    Sucursales.Add(sucursal);
+                    CrearSucursal();
                 }
+                if (decision0 == 2)
+                {
+                    Console.WriteLine("Elegir sucursal a agregar vehiculo:\n");
+                    ImprimirSucursales();
+                    decision2 = Int32.Parse(Console.ReadLine());
 
-                if (decision == 4)
+                    Console.WriteLine("Sucursal " + sucursales[decision2].Id + ":\n");
+                    if (sucursales[decision2].Vehiculos.Count < 1) Console.WriteLine("Esta sucursal aun no posee flota\n");
+                    else
+                    {
+                        Console.WriteLine("Inventario Actual:\n");
+                        sucursales[decision2].ImprimirFlota();
+                    }
+
+                }
+                if (decision0 == 4)
                 {
                     break;
                 }
 
-            }*/
+            }
             Console.WriteLine(sucursales[1].Id);
+            Console.WriteLine(sucursales[2].Id);
             Console.ReadLine();
             
         }

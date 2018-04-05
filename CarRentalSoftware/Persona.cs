@@ -14,12 +14,14 @@ namespace CarRentalSoftware
         {
             licencia.Add("Moto", (rand.Next() >= 0.5));
             licencia.Add("Auto", (rand.Next() >= 0.5));
+            licencia.Add("Camioneta", (rand.Next() >= 0.5));
             licencia.Add("Camion", (rand.Next() >= 0.5));
             licencia.Add("MaquinariaPesada", (rand.Next() >= 0.5));
             licencia.Add("Bus", (rand.Next() >= 0.5));
             licencia.Add("Acuatico", (rand.Next() >= 0.5));
 
         }
-        public Dictionary<string, bool> Licencia { get; }
+
+        public Dictionary<string, bool> Licencia { get => licencia; set => licencia = value; }
     }
 }

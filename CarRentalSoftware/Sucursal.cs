@@ -26,7 +26,7 @@ namespace CarRentalSoftware
             {
                 if (vehiculos[i].Tipo.Equals(tipo))
                 {
-                    stockvehiculos[i] = cantidad;
+                    Stockvehiculos[i] = Stockvehiculos[i]+ cantidad;
                     return true;
                 }
             }
@@ -40,12 +40,22 @@ namespace CarRentalSoftware
                 if (vehiculos[i].Tipo.Equals(tipo)) return false;
             }
             vehiculos.Add(vehiculos.Count + 1, new Vehiculos(tipo, precioarriendo));
-            stockvehiculos.Add(vehiculos.Count, 1);
+            Stockvehiculos.Add(vehiculos.Count, 1);
             return true;
         }
 
-        public float Id { get; }
-        public Dictionary<float,int> StockVehiculos { get; set; }
-        public Dictionary<float, Vehiculos> Vehiculos { get; set; }
+        public void ImprimirFlota()
+        {
+            foreach (float i in stockvehiculos.Keys)
+            {
+                Console.WriteLine(vehiculos[i].Tipo + ": " + stockvehiculos[i]+"\n");
+            }
+        }
+
+
+
+        public Dictionary<float, int> Stockvehiculos { get => stockvehiculos; set => stockvehiculos = value; }
+        public float Id { get => this.id; set => this.id = value; }
+        public Dictionary<float, Vehiculos> Vehiculos { get => vehiculos; set => vehiculos = value; }
     }
 }

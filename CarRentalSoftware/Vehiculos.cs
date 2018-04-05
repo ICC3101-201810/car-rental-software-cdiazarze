@@ -17,7 +17,8 @@ namespace CarRentalSoftware
             tipo = miTipo;
             precioarriendo = miPrecioArriendo;
         } 
-        public string Tipo { get; set; }
-        public float PrecioArriendo { get; set; }
+        
+        public string Tipo { get => tipo; set => tipo = value; }
+        public float Precioarriendo { get => precioarriendo; set => precioarriendo = value; }
     }
 }
