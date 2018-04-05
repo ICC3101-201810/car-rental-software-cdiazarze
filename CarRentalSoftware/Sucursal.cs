@@ -33,25 +33,30 @@ namespace CarRentalSoftware
             return false;
         }
 
-        public bool ComprarVehiculo(string tipo, float precioarriendo)
+        public bool ComprarVehiculo(string tipo, float precioarriendo, int cantidad)
         {
-            foreach (float i in vehiculos.Keys)
-            {
-                if (vehiculos[i].Tipo.Equals(tipo)) return false;
-            }
             vehiculos.Add(vehiculos.Count + 1, new Vehiculos(tipo, precioarriendo));
-            Stockvehiculos.Add(vehiculos.Count, 1);
+            Stockvehiculos.Add(vehiculos.Count, cantidad);
             return true;
         }
 
         public void ImprimirFlota()
         {
-            foreach (float i in stockvehiculos.Keys)
+            if (stockvehiculos.Count < 1) Console.WriteLine("Esta sucursal no posee flota");
+            else
             {
-                Console.WriteLine(vehiculos[i].Tipo + ": " + stockvehiculos[i]+"\n");
+                foreach (float i in stockvehiculos.Keys)
+                {
+                    Console.WriteLine("("+i+") "+vehiculos[i].Tipo + ": " + stockvehiculos[i]);
+                }
+                Console.WriteLine("\n");
             }
         }
-
+        public bool VerificarExistevehiculo(string tipo)
+        {
+            foreach (float i in vehiculos.Keys) if (vehiculos[i].Tipo.Equals(tipo)) return true;
+            return false;
+        }
 
 
         public Dictionary<float, int> Stockvehiculos { get => stockvehiculos; set => stockvehiculos = value; }

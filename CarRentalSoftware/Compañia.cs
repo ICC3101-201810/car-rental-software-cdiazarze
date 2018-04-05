@@ -9,10 +9,11 @@ namespace CarRentalSoftware
     class Compañia
     {
 
-        Dictionary<float, Registro> registros=new Dictionary<float, Registro>();
-        Dictionary<float,Cliente> clientes=new Dictionary<float, Cliente>();
+        Dictionary<float, Registro> registros = new Dictionary<float, Registro>();
+        Dictionary<float, Cliente> clientes = new Dictionary<float, Cliente>();
         Dictionary<float, Sucursal> sucursales = new Dictionary<float, Sucursal>();
-
+        Dictionary<float, string> vehiculossucursales=new Dictionary<float,string>(); 
+        
 
         public Compañia()
         {
@@ -61,65 +62,122 @@ namespace CarRentalSoftware
             }
         }
 
+
         public void programa()
         {
-            int decision0;
-            int decision2;
+            int decision0=0;
+            int decision2=0;
+            int id = 0;
+            string tipo;
+            int cantidad=0;
+            float precioarriendo=0;
+
             Console.WriteLine("Creando sucursal inicial...");
             CrearSucursal();
             Console.WriteLine("Agregando vehiculos...");
-            sucursales[1].ComprarVehiculo("Auto", 400);
-            sucursales[1].AumentarFlota("Auto", 14);
-            sucursales[1].ComprarVehiculo("Camioneta", 500);
-            sucursales[1].AumentarFlota("Camioneta", 17);
-            sucursales[1].ComprarVehiculo("Acuatico", 600);
-            sucursales[1].AumentarFlota("Acuatico", 8);
-            sucursales[1].ComprarVehiculo("Bus", 800);
-            sucursales[1].AumentarFlota("Bus", 3);
-            sucursales[1].ComprarVehiculo("MaquinariaPesada", 1000);
-            sucursales[1].AumentarFlota("MaquinariaPesada", 2);
-            sucursales[1].ComprarVehiculo("Moto", 300);
-            sucursales[1].AumentarFlota("Moto", 13);
+            sucursales[1].ComprarVehiculo("Auto", 400,15);
+            vehiculossucursales.Add(1, "Auto");
+            sucursales[1].ComprarVehiculo("Camioneta", 500,18);
+            vehiculossucursales.Add(2, "Camioneta");
+            sucursales[1].ComprarVehiculo("Acuatico", 600,9);
+            vehiculossucursales.Add(3, "Acuatico");
+            sucursales[1].ComprarVehiculo("Bus", 800,4);
+            vehiculossucursales.Add(4, "Bus");
+            sucursales[1].ComprarVehiculo("Retro", 1000,3);
+            vehiculossucursales.Add(5, "Retro");
+            sucursales[1].ComprarVehiculo("Moto", 300,14);
+            vehiculossucursales.Add(6, "Moto");
 
 
 
             Console.WriteLine("Sucursal incializada, ahora puede decidir que realizar a continuacion:\n");
             while (true)
             {
-                Console.WriteLine("Menu:\n(1) Crear Nueva Sucursal\n" +"(2) Agregar Vehiculo a Sucursal\n(3) Gestionar Arriendo\n(4) Salir\n");
+                Console.WriteLine("Menu:\n(1) Crear Nueva Sucursal\n(2) Ver flota de sucursal\n"+
+                    "(3) Agregar nuevo vehiculo a sucursal\n" +"(4) Incrementar flota actual de sucursal\n" +
+                    "(5) Gestionar Arriendo\n(6) Salir\n");
 
-                decision0 = Int32.Parse(Console.ReadLine());
+                decision0=VerifyInt(decision0);
 
                 if (decision0 == 1)
                 {
                     CrearSucursal();
                 }
-                if (decision0 == 2)
+                else if (decision0 == 2)
                 {
-                    Console.WriteLine("Elegir sucursal a agregar vehiculo:\n");
+                    Console.WriteLine("Elegir sucursal a revisar flota:\n");
                     ImprimirSucursales();
-                    decision2 = Int32.Parse(Console.ReadLine());
+                    decision2 = VerifyInt(decision2);
+                    Console.WriteLine("Sucursal " + sucursales[decision2].Id + ":\n");
+                    sucursales[decision2].ImprimirFlota();
+                }
+                else if (decision0 == 3)
+                {
+                    Console.WriteLine("Elegir sucursal a agregar nuevo vehiculo:\n");
+                    ImprimirSucursales();
 
+                    decision2 = VerifyInt(decision2);
+
+                    Console.WriteLine("Sucursal " + sucursales[decision2].Id + ":\n");
+                    Console.WriteLine("Flota actual en sucursal:\n");
+                    sucursales[decision2].ImprimirFlota();
+                    Console.WriteLine("Ingrese Tipo: ");
+                    tipo = Console.ReadLine();
+                    if (sucursales[decision2].VerificarExistevehiculo(tipo)) Console.WriteLine("Vehiculo ya existe en la flota. Debe seleccionar Incrementar Flota Actual");
+                    else
+                    { 
+                        if(!vehiculossucursales.ContainsValue(tipo)) vehiculossucursales.Add(vehiculossucursales.Count + 1, tipo);
+                        Console.WriteLine("Ingrese Precio de arriendo: ");
+                        precioarriendo = Verifyfloat(precioarriendo);
+                        Console.WriteLine("Ingrese Cantidad comprada: ");
+                        cantidad = VerifyInt(cantidad);
+                        sucursales[decision2].ComprarVehiculo(tipo, precioarriendo,cantidad);
+                    }
+                }
+                else if (decision0 == 4)
+                {
+                    Console.WriteLine("Elegir sucursal a incrementar flota:\n");
+                    ImprimirSucursales();
+                    decision2 = VerifyInt(decision2);
                     Console.WriteLine("Sucursal " + sucursales[decision2].Id + ":\n");
                     if (sucursales[decision2].Vehiculos.Count < 1) Console.WriteLine("Esta sucursal aun no posee flota\n");
                     else
                     {
                         Console.WriteLine("Inventario Actual:\n");
                         sucursales[decision2].ImprimirFlota();
+                        Console.WriteLine("Ingrese (id) Tipo: ");
+                        id = VerifyInt(id);
+                        tipo = sucursales[decision2].Vehiculos[id].Tipo;
+                        Console.WriteLine("Ingrese Cantidad comprada: ");
+                        cantidad = VerifyInt(cantidad);
+                        sucursales[decision2].AumentarFlota(tipo, cantidad);
+                        Console.WriteLine("Nuevo Inventario:\n");
+                        sucursales[decision2].ImprimirFlota();
                     }
-
                 }
-                if (decision0 == 4)
-                {
-                    break;
-                }
+                else break;
+                
 
             }
-            Console.WriteLine(sucursales[1].Id);
-            Console.WriteLine(sucursales[2].Id);
-            Console.ReadLine();
             
         }
-
+        public int VerifyInt(int numberout)
+        {
+            while (true)
+            {
+                if (!Int32.TryParse(Console.ReadLine(), out numberout)) Console.WriteLine("Formato erroneo, ingrese nuevamente:");
+                else break;
+            }
+            return numberout;
+        }
+        public float Verifyfloat(float numberout)
+        {
+            while (true)
+            {
+                if (!float.TryParse(Console.ReadLine(), out numberout)) Console.WriteLine("Formato erroneo, ingrese nuevamente:");
+                else break;
+            }
+            return numberout;
+        }
     }
 }
