@@ -9,10 +9,12 @@ namespace CarRentalSoftware
     class Compañia
     {
 
+        Random random = new Random();
         Dictionary<float, Registro> registros = new Dictionary<float, Registro>();
         Dictionary<string, Cliente> clientes = new Dictionary<string, Cliente>();
         Dictionary<float, Sucursal> sucursales = new Dictionary<float, Sucursal>();
-        Dictionary<float, string> vehiculossucursales=new Dictionary<float, string>
+        Dictionary<float, Registro> ArriendoNoLogrado = new Dictionary<float, Registro>();
+        Dictionary<float, string> vehiculossucursales = new Dictionary<float, string>
         {
             {1,"Auto"},
             {2,"Moto"},
@@ -76,21 +78,30 @@ namespace CarRentalSoftware
             }
             else
             {
-                if (tipocliente == 1) cliente = new Persona(rut, clientes.Count + 1, 1);
-                else cliente = new Agrupacion(rut, clientes.Count + 1, 2);
+                if (tipocliente == 1) cliente = new Persona(rut, clientes.Count + 1, 1,random);
+                else cliente = new Agrupacion(rut, clientes.Count + 1, 2,random);
             }
 
-            if (sucursales[eleccionsucursal].Stockvehiculos[decvehiculo]<1) return 1;
-            if (!cliente.Permisoconducir()[sucursales[eleccionsucursal].Vehiculos[decvehiculo].Tipo]) return 2;
-
-            //Se realiza arriendo
-            sucursales[eleccionsucursal].Stockvehiculos[decvehiculo] -= 1;
             sumatotal += sucursales[eleccionsucursal].Vehiculos[decvehiculo].Precioarriendo;
-            foreach(Accesorios accesorio in acc) sumatotal += accesorio.Precio;
+            foreach (Accesorios accesorio in acc) sumatotal += accesorio.Precio;
+
+            if (sucursales[eleccionsucursal].Stockvehiculos[decvehiculo] < 1)
+            {
+                ArriendoNoLogrado.Add(ArriendoNoLogrado.Count + 1, new Registro(cliente, sucursales[eleccionsucursal].Vehiculos[decvehiculo], sucursales[eleccionsucursal], acc, termino, sumatotal));
+                ArriendoNoLogrado[ArriendoNoLogrado.Count].Fallo = "No se arrienda por falta de stock.";
+                return 1;
+            }
+            if (!cliente.Permisoconducir()[sucursales[eleccionsucursal].Vehiculos[decvehiculo].Tipo])
+            { 
+                ArriendoNoLogrado.Add(ArriendoNoLogrado.Count + 1, new Registro(cliente, sucursales[eleccionsucursal].Vehiculos[decvehiculo], sucursales[eleccionsucursal], acc, termino, sumatotal));
+                ArriendoNoLogrado[ArriendoNoLogrado.Count].Fallo = "No se arrienda por falta de licencia para conducir.";
+                return 2;
+            }
+
+        //Se realiza arriendo
+        sucursales[eleccionsucursal].Stockvehiculos[decvehiculo] -= 1;
             registros.Add(registros.Count+1,new Registro(cliente, sucursales[eleccionsucursal].Vehiculos[decvehiculo],sucursales[eleccionsucursal], acc, termino,sumatotal));
             if (!existe) clientes.Add(rut, cliente);
-            Console.WriteLine("Arriendo Completado, queda Registro"+ registros.Count+":\n");
-            registros[registros.Count].ImprimirRegistro();
             return 0;
         }
 
@@ -251,7 +262,11 @@ namespace CarRentalSoftware
                     Console.WriteLine("Ingrese fecha de termino contrato:\n");
                     termino = DateTime.Parse(Console.ReadLine());
                     resultadoarrendar=ArrendarVehiculo(rut, tipocliente, eleccionsucursal, decvehiculo, acc, termino);
-
+                    if (resultadoarrendar == 0)
+                    {
+                        Console.WriteLine("Arriendo Completado, queda Registro" + registros.Count + ":\n");
+                        registros[registros.Count].ImprimirRegistro();
+                    }
                     if (resultadoarrendar == 1) Console.WriteLine("No hay stock");
                     if (resultadoarrendar == 2) Console.WriteLine("No tiene permiso para conducir el vehiculo requerido");
                 }
@@ -271,6 +286,63 @@ namespace CarRentalSoftware
             }
             
         }
+        public void Simulacion()
+        {
+            int hora = 9;
+            int llegadapersonas;
+            string rut;
+            int tipocliente;
+            int eleccionsucursal=1;
+            int decvehiculo;
+            DateTime termino;
+            int resultadoarriendo;
+            int ultimoregistrohora=1;
+            int accion; //accion 1=arrendar, accion=2 devolver.
+
+            Console.WriteLine("Creando sucursal inicial...");
+            CrearSucursal();
+            Console.WriteLine("Agregando vehiculos...");
+            sucursales[1].ComprarVehiculo("Auto", 400, 15);
+            sucursales[1].ComprarVehiculo("Camioneta", 500, 18);
+            sucursales[1].ComprarVehiculo("Acuatico", 600, 9);
+            sucursales[1].ComprarVehiculo("Bus", 800, 4);
+            sucursales[1].ComprarVehiculo("MaquinariaPesada", 1000, 3);
+            sucursales[1].ComprarVehiculo("Moto", 300, 14);
+
+            while (hora < 21)
+            {
+                llegadapersonas = random.Next(5, 12);
+                for(int numeropersona=1; numeropersona <= llegadapersonas; numeropersona++)
+                {
+                    List<Accesorios> acc = new List<Accesorios>();
+                    rut =random.Next(1000000, 20000000).ToString();
+                    tipocliente = random.Next(1, 3);
+                    decvehiculo = random.Next(1, 7);
+                    termino = DateTime.Now.AddDays(random.Next(1,10));
+                    int[] accesorios = { random.Next(1, 11), random.Next(1, 11), random.Next(1, 11), random.Next(1, 10), random.Next(1, 10), random.Next(1, 10) };
+                    for (int i=0; i < 6; i++) if (accesorios[i] > 9) acc.Add(sucursales[eleccionsucursal].Accesorios[i + 1]);
+                    accion = random.Next(1, 3);
+                    if (accion == 1) resultadoarriendo = ArrendarVehiculo(rut, tipocliente, eleccionsucursal, decvehiculo, acc, termino);
+                    else sucursales[eleccionsucursal].RecibirVehiculo(sucursales[eleccionsucursal].Vehiculos[decvehiculo].Tipo);
+                }
+                //if (registros.Count > 0) for (int i = ultimoregistrohora; i <= registros.Count; i++) registros[i].Fecha = DateTime.Parse(hora.ToString());
+                //if (ArriendoNoLogrado.Count > 0) for (int i = ultimoregistrohora; i <= ArriendoNoLogrado.Count; i++) ArriendoNoLogrado[i].Fecha = DateTime.Parse(hora.ToString());
+                hora++;
+            }
+            for (int i=1; i <= registros.Count; i++)
+            {
+                registros[i].ImprimirRegistroenlinea();
+            }
+            Console.WriteLine("Arriendos no logrados");
+            for (int i = 1; i <= ArriendoNoLogrado.Count; i++)
+            {
+                ArriendoNoLogrado[i].ImprimirRegistroenlinea();
+            }
+            Console.ReadLine();
+            
+            
+        }
+
         public int VerifyInt(int numberout)
         {
             while (true)

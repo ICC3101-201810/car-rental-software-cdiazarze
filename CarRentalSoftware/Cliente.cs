@@ -13,15 +13,15 @@ namespace CarRentalSoftware
         protected int edad;
         protected string nombre;
         float id;
-        protected Random rand =new Random();
-
+        Random rand;
        
 
-        public Cliente(string miRut, float miId, int miTipo)
+        public Cliente(string miRut, float miId, int miTipo, Random miRand)
         {
             rut = miRut;
             id = miId;
             tipo = miTipo;
+            rand = miRand;
 
         }
         public abstract Dictionary<string, bool> Permisoconducir();

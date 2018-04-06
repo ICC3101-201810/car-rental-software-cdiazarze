@@ -9,13 +9,11 @@ namespace CarRentalSoftware
     class Agrupacion: Cliente
     {
         string[] nombres = { "Arauco", "ONU", "UNICEF", "Copec", "Don Pollo", "COANIQUEM", "NACIONAL", "Rebel Alliance", "Todos por un Ewok", "Corporation SA", "AS Inversions", "Panama Papers", "Ruby", "Gold Diamond", "Xerox S.A" };
-
         Dictionary<string, bool> autorizacion = new Dictionary<string, bool>();
 
-        public Agrupacion(string miRut, float miId, int miTipo) : base(miRut, miId, miTipo)
+        public Agrupacion(string miRut, float miId, int miTipo,Random rand) : base(miRut, miId, miTipo,rand)
         {
             nombre = nombres[rand.Next(0, nombres.Length)];
-            edad = rand.Next(18, 80);
             edad = rand.Next(18, 80);
             autorizacion.Add("Moto", (rand.NextDouble() >= 0.5));
             autorizacion.Add("Auto", (rand.NextDouble() >= 0.5));

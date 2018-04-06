@@ -16,6 +16,7 @@ namespace CarRentalSoftware
         DateTime terminocontrato;
         float totalprecio;
         Sucursal sucursal;
+        string fallo="";
 
         public Registro(Cliente miCliente, Vehiculos miVehiculo, Sucursal miSucursal, List<Accesorios> miAccesorios, DateTime miTerminoContrato, float miTotalPrecio)
         {
@@ -34,6 +35,7 @@ namespace CarRentalSoftware
         public DateTime Fecha { get => fecha; set => fecha = value; }
         public DateTime Terminocontrato { get => terminocontrato; set => terminocontrato = value; }
         public float Totalprecio { get => totalprecio; set => totalprecio = value; }
+        public string Fallo { get => fallo; set => fallo= value; }
         public List<Accesorios> Accesorios { get => accesorios; set => accesorios = value; }
 
         public void ImprimirRegistro()
@@ -46,6 +48,17 @@ namespace CarRentalSoftware
             Console.WriteLine("\nInicio: " + fecha);
             Console.WriteLine("Termino: " + terminocontrato);
             Console.WriteLine("Total servicio: " + totalprecio+"\n");
+        }
+        public void ImprimirRegistroenlinea()
+        {
+            Console.Write("Cliente: " + cliente.Nombre);
+            Console.Write(", Vehiculo: " + vehiculo.Tipo);
+            Console.Write(", Accesorios: ");
+            foreach (Accesorios acc in accesorios) Console.Write(acc.Nombre + ",");
+            Console.Write(" Inicio: " + fecha);
+            Console.Write(", Termino: " + terminocontrato);
+            if (!fallo.Equals("")) { Console.Write(", Total servicio: " + totalprecio); Console.Write(", : " + fallo + "\n"); }
+            else Console.Write(", Total servicio: " + totalprecio+ "\n");
         }
     }
 }

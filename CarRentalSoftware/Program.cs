@@ -12,7 +12,8 @@ namespace CarRentalSoftware
         static void Main(string[] args)
         {
             Compañia c = new Compañia();
-            c.programa();
+            //c.programa();
+            c.Simulacion();
         }
     }
 }
