@@ -68,9 +68,11 @@ namespace CarRentalSoftware
 
             Cliente cliente;
             float sumatotal = 0;
+            bool existe = false;
             if (clientes.ContainsKey(rut))
             {
                 cliente = clientes[rut];
+                existe = true;
             }
             else
             {
@@ -86,9 +88,9 @@ namespace CarRentalSoftware
             sumatotal += sucursales[eleccionsucursal].Vehiculos[decvehiculo].Precioarriendo;
             foreach(Accesorios accesorio in acc) sumatotal += accesorio.Precio;
             registros.Add(registros.Count+1,new Registro(cliente, sucursales[eleccionsucursal].Vehiculos[decvehiculo],sucursales[eleccionsucursal], acc, termino,sumatotal));
-            clientes.Add(rut, cliente);
-            Console.WriteLine("Arriendo Completado, queda Registro:\n");
-            
+            if (!existe) clientes.Add(rut, cliente);
+            Console.WriteLine("Arriendo Completado, queda Registro"+ registros.Count+":\n");
+            registros[registros.Count].ImprimirRegistro();
             return 0;
         }
 
@@ -105,14 +107,25 @@ namespace CarRentalSoftware
         public void ImprimirRegistroArriendoCliente(string rut)
         {
             Console.WriteLine("Registros de arriendo del cliente:\n");
-            foreach (float idreg in ArriendosdeCliente(clientes[rut])) Console.WriteLine(idreg);
+            foreach (float idreg in ArriendosdeCliente(clientes[rut]))
+            {
+                Console.WriteLine("Registro: "+idreg);
+                registros[idreg].ImprimirRegistro();
+            }
             Console.WriteLine("Total: " + ArriendosdeCliente(clientes[rut]).Count);
         }
-
+        public void ImprimirLicenciasCliente(string rut)
+        {
+            Console.WriteLine("Licencias Aceptadas: {");
+            foreach (string lic in clientes[rut].Permisoconducir().Keys) if (clientes[rut].Permisoconducir()[lic]) Console.Write(lic + ",");
+            Console.Write("}\n");
+        }
+        //Este manda
         public void ImprimirDatosClienteAntiguo(string rut)
         {
             Console.WriteLine("Cliente con datos en sistema (arrendo previamente):\nN° Cliente: " + clientes[rut].Id +
-                "Rut: " + rut + "\nNombre: " + clientes[rut].Nombre +"\nEdad: " + clientes[rut].Edad);
+                "\nRut: " + rut + "\nNombre: " + clientes[rut].Nombre +"\nEdad: " + clientes[rut].Edad);
+            ImprimirLicenciasCliente(rut);
             ImprimirRegistroArriendoCliente(rut);
         }
        
@@ -152,7 +165,7 @@ namespace CarRentalSoftware
             {
                 Console.WriteLine("Menu:\n(1) Crear Nueva Sucursal\n(2) Ver flota de sucursal\n"+
                     "(3) Agregar nuevo vehiculo a sucursal\n" +"(4) Incrementar flota actual de sucursal\n" +
-                    "(5) Gestionar Arriendo\n(6) Salir\n");
+                    "(5) Gestionar Arriendo\n(6) Devolver Vehiculo\n(7) Salir\n");
 
                 decision0=VerifyInt(decision0);
 
@@ -210,7 +223,11 @@ namespace CarRentalSoftware
                     List<Accesorios> acc = new List<Accesorios>();
                     Console.WriteLine("Ingrese rut de cliente");
                     rut = Console.ReadLine();
-                    if (clientes.ContainsKey(rut)) tipocliente = clientes[rut].Tipo;
+                    if (clientes.ContainsKey(rut))
+                    {
+                        tipocliente = clientes[rut].Tipo;
+                        ImprimirDatosClienteAntiguo(rut);
+                    }
                     else
                     {
                         Console.WriteLine("Cliente no existe en sistema. Es Persona Natural o representa Agrupacion:\n (1) Persona Natural\n (2) Institucion\n");
@@ -223,10 +240,10 @@ namespace CarRentalSoftware
                     decvehiculo=VerifyInt(decvehiculo);
                     while (true) {
                         Console.WriteLine("Desea agregar accesorios:");
-                        foreach (int acce in sucursales[eleccionsucursal].Accesorios.Keys) Console.WriteLine("\n(" + acce+") "+
+                        foreach (int acce in sucursales[eleccionsucursal].Accesorios.Keys) Console.WriteLine("(" + acce+") "+
                             sucursales[eleccionsucursal].Accesorios[acce].Nombre+" Precio: "+ 
                             sucursales[eleccionsucursal].Accesorios[acce].Precio);
-                        Console.WriteLine("\n("+ (sucursales[eleccionsucursal].Accesorios.Count+1) +") Continuar\n");
+                        Console.WriteLine("("+ (sucursales[eleccionsucursal].Accesorios.Count+1) +") Continuar\n");
                         decacce = VerifyInt(decacce);
                         if(decacce<sucursales[eleccionsucursal].Accesorios.Count+1) acc.Add(sucursales[eleccionsucursal].Accesorios[decacce]); 
                         else break;
@@ -237,6 +254,16 @@ namespace CarRentalSoftware
 
                     if (resultadoarrendar == 1) Console.WriteLine("No hay stock");
                     if (resultadoarrendar == 2) Console.WriteLine("No tiene permiso para conducir el vehiculo requerido");
+                }
+                else if (decision0 == 6)
+                {
+                    Console.WriteLine("Elegir sucursal a devolver vehiculo:\n");
+                    decision2 = ElegirSucursal(decision2);
+                    Console.WriteLine("Elegir vehiculo a devolver: \n");
+                    foreach (float i in vehiculossucursales.Keys) Console.WriteLine("(" + i + ") " + vehiculossucursales[i]);
+                    Console.WriteLine("Ingrese (id) Tipo que quiere agregar: ");
+                    id = VerifyInt(id);
+                    sucursales[decision2].RecibirVehiculo(vehiculossucursales[id]);
                 }
                 else break;
                 

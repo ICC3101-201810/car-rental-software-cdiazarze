@@ -17,13 +17,13 @@ namespace CarRentalSoftware
             nombre = nombres[rand.Next(0, nombres.Length)];
             edad = rand.Next(18, 80);
             edad = rand.Next(18, 80);
-            autorizacion.Add("Moto", (rand.Next() >= 0.5));
-            autorizacion.Add("Auto", (rand.Next() >= 0.5));
-            autorizacion.Add("Camioneta", (rand.Next() >= 0.5));
-            autorizacion.Add("Camion", (rand.Next() >= 0.5));
-            autorizacion.Add("MaquinariaPesada", (rand.Next() >= 0.5));
-            autorizacion.Add("Bus", (rand.Next() >= 0.5));
-            autorizacion.Add("Acuatico", (rand.Next() >= 0.5));
+            autorizacion.Add("Moto", (rand.NextDouble() >= 0.5));
+            autorizacion.Add("Auto", (rand.NextDouble() >= 0.5));
+            autorizacion.Add("Camioneta", (rand.NextDouble() >= 0.5));
+            autorizacion.Add("Camion", (rand.NextDouble() >= 0.5));
+            autorizacion.Add("MaquinariaPesada", (rand.NextDouble() >= 0.5));
+            autorizacion.Add("Bus", (rand.NextDouble() >= 0.5));
+            autorizacion.Add("Acuatico", (rand.NextDouble() >= 0.5));
         }
 
         public override Dictionary<string, bool> Permisoconducir() { return autorizacion; }

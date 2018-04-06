@@ -38,13 +38,14 @@ namespace CarRentalSoftware
 
         public void ImprimirRegistro()
         {
-            Console.WriteLine("Cliente: " + cliente);
-            Console.WriteLine("Vehiculo: " + vehiculo);
-            Console.WriteLine("Sucursal: " + sucursal);
-            foreach (Accesorios acc in accesorios) Console.Write("\nAccesorios: " + acc.Nombre + ",");
-            Console.WriteLine("Inicio: " + fecha);
+            Console.WriteLine("Cliente: " + cliente.Nombre);
+            Console.WriteLine("Vehiculo: " + vehiculo.Tipo);
+            Console.WriteLine("Sucursal: " + sucursal.Id);
+            Console.Write("Accesorios: ");
+            foreach (Accesorios acc in accesorios) Console.Write(acc.Nombre + ",");
+            Console.WriteLine("\nInicio: " + fecha);
             Console.WriteLine("Termino: " + terminocontrato);
-            Console.WriteLine("Total servicio: " + totalprecio);
+            Console.WriteLine("Total servicio: " + totalprecio+"\n");
         }
     }
 }

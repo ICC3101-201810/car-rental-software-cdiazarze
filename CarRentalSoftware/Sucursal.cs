@@ -66,7 +66,16 @@ namespace CarRentalSoftware
             foreach (float i in vehiculos.Keys) if (vehiculos[i].Tipo.Equals(tipo)) return true;
             return false;
         }
-
+        public void RecibirVehiculo(string tipo)
+        {
+            foreach (float i in vehiculos.Keys)
+            {
+                if (vehiculos[i].Tipo.Equals(tipo))
+                {
+                    Stockvehiculos[i] +=1;
+                }
+            }
+        }
 
         public Dictionary<float, int> Stockvehiculos { get => stockvehiculos; set => stockvehiculos = value; }
         public float Id { get => this.id; set => this.id = value; }
