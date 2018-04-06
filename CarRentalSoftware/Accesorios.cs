@@ -16,29 +16,9 @@ namespace CarRentalSoftware
             nombre = miNombre;
             precio = miPrecio;
         }
-        public string Nombre
-        {
-            get
-            {
-                return this.nombre;
-            }
-            set
-            {
-                this.nombre = value;
-            }
-        }
-        public float Precio
-        {
-            get
-            {
-                return this.precio;
-            }
-            set
-            {
-                this.precio = value;
-            }
-        }
 
+        public string Nombre { get => nombre; set => nombre = value; }
+        public float Precio { get => precio; set => precio = value; }
     }
 
 }

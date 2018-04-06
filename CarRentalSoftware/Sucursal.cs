@@ -10,7 +10,15 @@ namespace CarRentalSoftware
     {
         Dictionary<float, int> stockvehiculos= new Dictionary<float, int>();
         Dictionary<float, Vehiculos> vehiculos = new Dictionary<float, Vehiculos>();
-        List<Accesorios> accesorios = new List<Accesorios>();
+        Dictionary<int,Accesorios> accesorios = new Dictionary<int, Accesorios>
+        {
+            {1,new Accesorios("GPS",10)},
+            {2,new Accesorios("Wifi",12)},
+            {3,new Accesorios("Radio Powe",8)},
+            {4,new Accesorios("Rueda extra",5)},
+            {5,new Accesorios("Cortinas",2)},
+            {6,new Accesorios("Silla salva hermanitos",20)},
+        };
 
         float id;
 
@@ -45,6 +53,7 @@ namespace CarRentalSoftware
             if (stockvehiculos.Count < 1) Console.WriteLine("Esta sucursal no posee flota");
             else
             {
+                Console.WriteLine("Flota en sucursal:\n");
                 foreach (float i in stockvehiculos.Keys)
                 {
                     Console.WriteLine("("+i+") "+vehiculos[i].Tipo + ": " + stockvehiculos[i]);
@@ -62,5 +71,6 @@ namespace CarRentalSoftware
         public Dictionary<float, int> Stockvehiculos { get => stockvehiculos; set => stockvehiculos = value; }
         public float Id { get => this.id; set => this.id = value; }
         public Dictionary<float, Vehiculos> Vehiculos { get => vehiculos; set => vehiculos = value; }
+        public Dictionary<int, Accesorios> Accesorios { get => accesorios; set => accesorios = value; }
     }
 }

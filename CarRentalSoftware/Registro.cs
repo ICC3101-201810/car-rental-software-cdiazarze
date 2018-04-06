@@ -15,22 +15,36 @@ namespace CarRentalSoftware
         DateTime fecha;
         DateTime terminocontrato;
         float totalprecio;
+        Sucursal sucursal;
 
-        public Registro(Cliente miCliente, Vehiculos miVehiculo, List<Accesorios> miAccesorios, DateTime miTerminoContrato, float miTotalPrecio)
+        public Registro(Cliente miCliente, Vehiculos miVehiculo, Sucursal miSucursal, List<Accesorios> miAccesorios, DateTime miTerminoContrato, float miTotalPrecio)
         {
             cliente = miCliente;
             vehiculo = miVehiculo;
+            sucursal = miSucursal;
             accesorios = miAccesorios;
             fecha = DateTime.Now;
             terminocontrato = miTerminoContrato;
             totalprecio = miTotalPrecio;
         }
 
+
         public Cliente Cliente { get => cliente; set => cliente = value; }
         public Vehiculos Vehiculo { get => vehiculo; set => vehiculo = value; }
         public DateTime Fecha { get => fecha; set => fecha = value; }
         public DateTime Terminocontrato { get => terminocontrato; set => terminocontrato = value; }
         public float Totalprecio { get => totalprecio; set => totalprecio = value; }
-        internal List<Accesorios> Accesorios { get => accesorios; set => accesorios = value; }
+        public List<Accesorios> Accesorios { get => accesorios; set => accesorios = value; }
+
+        public void ImprimirRegistro()
+        {
+            Console.WriteLine("Cliente: " + cliente);
+            Console.WriteLine("Vehiculo: " + vehiculo);
+            Console.WriteLine("Sucursal: " + sucursal);
+            foreach (Accesorios acc in accesorios) Console.Write("\nAccesorios: " + acc.Nombre + ",");
+            Console.WriteLine("Inicio: " + fecha);
+            Console.WriteLine("Termino: " + terminocontrato);
+            Console.WriteLine("Total servicio: " + totalprecio);
+        }
     }
 }

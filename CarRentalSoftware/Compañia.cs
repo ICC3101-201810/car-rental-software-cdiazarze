@@ -10,40 +10,38 @@ namespace CarRentalSoftware
     {
 
         Dictionary<float, Registro> registros = new Dictionary<float, Registro>();
-        Dictionary<float, Cliente> clientes = new Dictionary<float, Cliente>();
+        Dictionary<string, Cliente> clientes = new Dictionary<string, Cliente>();
         Dictionary<float, Sucursal> sucursales = new Dictionary<float, Sucursal>();
-        Dictionary<float, string> vehiculossucursales=new Dictionary<float,string>(); 
+        Dictionary<float, string> vehiculossucursales=new Dictionary<float, string>
+        {
+            {1,"Auto"},
+            {2,"Moto"},
+            {3,"Camioneta"},
+            {4,"Camion"},
+            {5,"MaquinariaPesada"},
+            {6,"Bus"},
+            {7,"Acuatico"},
+        }; 
         
 
         public Compañia()
         {
         }
 
+
+        //Metodos para gestionar sucursales
         public void CrearSucursal()
         {
             if (!sucursales.ContainsKey(1)) sucursales.Add(1, new Sucursal(1));
             else sucursales.Add(sucursales.Count + 1, new Sucursal(sucursales.Count + 1));
             Console.WriteLine("Sucursal Id:" + sucursales.Count + " creada.\n");
         }
-        public int ArrendarVehiculo(float idSucursal, string tipo, Cliente cliente, DateTime termino) 
+        public int ElegirSucursal(int decision2)
         {
-            int i;
-            Vehiculos veh;
-            for (i = 0; i < sucursales[idSucursal].Vehiculos.Count; i++)
-            {
-                if (sucursales[idSucursal].Vehiculos[i].Tipo.Equals(tipo)) break;
-            }
-            veh = sucursales[idSucursal].Vehiculos[i];
-            if (!sucursales.ContainsKey(idSucursal)) return 0;
-            if (sucursales[idSucursal].Stockvehiculos[i] < 1) return 1;
-            
-
-            sucursales[idSucursal].Stockvehiculos[i] -= 1;
-            
-            float totalprecio = veh.Precioarriendo;
-            List<Accesorios> accesorios = new List<Accesorios>();
-            registros.Add(registros.Count + 1, new Registro(cliente, veh, accesorios, termino, totalprecio));
-            return 2;
+            ImprimirSucursales();
+            decision2 = VerifyInt(decision2);
+            Console.WriteLine("Sucursal " + sucursales[decision2].Id + ":\n");
+            return decision2;
         }
 
         public void VerStockVehiculosSucursal(float idSucursal)
@@ -63,6 +61,63 @@ namespace CarRentalSoftware
         }
 
 
+        // Metodos para gestionar arriendos de vehiculos
+
+        public int ArrendarVehiculo(string rut, int tipocliente, int eleccionsucursal, int decvehiculo, List<Accesorios> acc, DateTime termino)
+        {
+
+            Cliente cliente;
+            float sumatotal = 0;
+            if (clientes.ContainsKey(rut))
+            {
+                cliente = clientes[rut];
+            }
+            else
+            {
+                if (tipocliente == 1) cliente = new Persona(rut, clientes.Count + 1, 1);
+                else cliente = new Agrupacion(rut, clientes.Count + 1, 2);
+            }
+
+            if (sucursales[eleccionsucursal].Stockvehiculos[decvehiculo]<1) return 1;
+            if (!cliente.Permisoconducir()[sucursales[eleccionsucursal].Vehiculos[decvehiculo].Tipo]) return 2;
+
+            //Se realiza arriendo
+            sucursales[eleccionsucursal].Stockvehiculos[decvehiculo] -= 1;
+            sumatotal += sucursales[eleccionsucursal].Vehiculos[decvehiculo].Precioarriendo;
+            foreach(Accesorios accesorio in acc) sumatotal += accesorio.Precio;
+            registros.Add(registros.Count+1,new Registro(cliente, sucursales[eleccionsucursal].Vehiculos[decvehiculo],sucursales[eleccionsucursal], acc, termino,sumatotal));
+            clientes.Add(rut, cliente);
+            Console.WriteLine("Arriendo Completado, queda Registro:\n");
+            
+            return 0;
+        }
+
+        public List<float> ArriendosdeCliente(Cliente cliente)
+        {
+            List<float> Numerosderegistro = new List<float>();
+            foreach (float idreg in registros.Keys)
+            {
+                if (registros[idreg].Cliente == cliente) Numerosderegistro.Add(idreg);
+            }
+            return Numerosderegistro;
+        }
+
+        public void ImprimirRegistroArriendoCliente(string rut)
+        {
+            Console.WriteLine("Registros de arriendo del cliente:\n");
+            foreach (float idreg in ArriendosdeCliente(clientes[rut])) Console.WriteLine(idreg);
+            Console.WriteLine("Total: " + ArriendosdeCliente(clientes[rut]).Count);
+        }
+
+        public void ImprimirDatosClienteAntiguo(string rut)
+        {
+            Console.WriteLine("Cliente con datos en sistema (arrendo previamente):\nN° Cliente: " + clientes[rut].Id +
+                "Rut: " + rut + "\nNombre: " + clientes[rut].Nombre +"\nEdad: " + clientes[rut].Edad);
+            ImprimirRegistroArriendoCliente(rut);
+        }
+       
+
+
         public void programa()
         {
             int decision0=0;
@@ -71,22 +126,24 @@ namespace CarRentalSoftware
             string tipo;
             int cantidad=0;
             float precioarriendo=0;
+            string rut;
+            int tipocliente=0;
+            int eleccionsucursal=0;
+            int decvehiculo = 0;
+            int decacce = 0;
+            int resultadoarrendar;
+            DateTime termino;
+            
 
             Console.WriteLine("Creando sucursal inicial...");
             CrearSucursal();
             Console.WriteLine("Agregando vehiculos...");
             sucursales[1].ComprarVehiculo("Auto", 400,15);
-            vehiculossucursales.Add(1, "Auto");
             sucursales[1].ComprarVehiculo("Camioneta", 500,18);
-            vehiculossucursales.Add(2, "Camioneta");
             sucursales[1].ComprarVehiculo("Acuatico", 600,9);
-            vehiculossucursales.Add(3, "Acuatico");
             sucursales[1].ComprarVehiculo("Bus", 800,4);
-            vehiculossucursales.Add(4, "Bus");
-            sucursales[1].ComprarVehiculo("Retro", 1000,3);
-            vehiculossucursales.Add(5, "Retro");
+            sucursales[1].ComprarVehiculo("MaquinariaPesada", 1000,3);
             sucursales[1].ComprarVehiculo("Moto", 300,14);
-            vehiculossucursales.Add(6, "Moto");
 
 
 
@@ -106,32 +163,26 @@ namespace CarRentalSoftware
                 else if (decision0 == 2)
                 {
                     Console.WriteLine("Elegir sucursal a revisar flota:\n");
-                    ImprimirSucursales();
-                    decision2 = VerifyInt(decision2);
-                    Console.WriteLine("Sucursal " + sucursales[decision2].Id + ":\n");
+                    decision2=ElegirSucursal(decision2);
                     sucursales[decision2].ImprimirFlota();
                 }
                 else if (decision0 == 3)
                 {
                     Console.WriteLine("Elegir sucursal a agregar nuevo vehiculo:\n");
-                    ImprimirSucursales();
-
-                    decision2 = VerifyInt(decision2);
-
-                    Console.WriteLine("Sucursal " + sucursales[decision2].Id + ":\n");
-                    Console.WriteLine("Flota actual en sucursal:\n");
+                    decision2 = ElegirSucursal(decision2);
                     sucursales[decision2].ImprimirFlota();
-                    Console.WriteLine("Ingrese Tipo: ");
-                    tipo = Console.ReadLine();
-                    if (sucursales[decision2].VerificarExistevehiculo(tipo)) Console.WriteLine("Vehiculo ya existe en la flota. Debe seleccionar Incrementar Flota Actual");
+                    Console.WriteLine("Tipos posibles de vehiculos para agregar: \n");
+                    foreach (float i in vehiculossucursales.Keys) Console.WriteLine("("+i+") "+vehiculossucursales[i]);
+                    Console.WriteLine("Ingrese (id) Tipo que quiere agregar: ");
+                    id = VerifyInt(id);
+                    if (sucursales[decision2].VerificarExistevehiculo(vehiculossucursales[id])) Console.WriteLine("Vehiculo ya existe en la flota. Debe seleccionar Incrementar Flota Actual");
                     else
                     { 
-                        if(!vehiculossucursales.ContainsValue(tipo)) vehiculossucursales.Add(vehiculossucursales.Count + 1, tipo);
                         Console.WriteLine("Ingrese Precio de arriendo: ");
                         precioarriendo = Verifyfloat(precioarriendo);
                         Console.WriteLine("Ingrese Cantidad comprada: ");
                         cantidad = VerifyInt(cantidad);
-                        sucursales[decision2].ComprarVehiculo(tipo, precioarriendo,cantidad);
+                        sucursales[decision2].ComprarVehiculo(vehiculossucursales[id], precioarriendo,cantidad);
                     }
                 }
                 else if (decision0 == 4)
@@ -143,7 +194,6 @@ namespace CarRentalSoftware
                     if (sucursales[decision2].Vehiculos.Count < 1) Console.WriteLine("Esta sucursal aun no posee flota\n");
                     else
                     {
-                        Console.WriteLine("Inventario Actual:\n");
                         sucursales[decision2].ImprimirFlota();
                         Console.WriteLine("Ingrese (id) Tipo: ");
                         id = VerifyInt(id);
@@ -154,6 +204,39 @@ namespace CarRentalSoftware
                         Console.WriteLine("Nuevo Inventario:\n");
                         sucursales[decision2].ImprimirFlota();
                     }
+                }
+                else if (decision0 == 5)
+                {
+                    List<Accesorios> acc = new List<Accesorios>();
+                    Console.WriteLine("Ingrese rut de cliente");
+                    rut = Console.ReadLine();
+                    if (clientes.ContainsKey(rut)) tipocliente = clientes[rut].Tipo;
+                    else
+                    {
+                        Console.WriteLine("Cliente no existe en sistema. Es Persona Natural o representa Agrupacion:\n (1) Persona Natural\n (2) Institucion\n");
+                        tipocliente = VerifyInt(tipocliente);
+                    }
+                    Console.WriteLine("Ingrese sucursal donde arrendar vehiculo:\n");
+                    eleccionsucursal = ElegirSucursal(eleccionsucursal);
+                    sucursales[eleccionsucursal].ImprimirFlota();
+                    Console.WriteLine("Seleccione vehiculo a arrendar:");
+                    decvehiculo=VerifyInt(decvehiculo);
+                    while (true) {
+                        Console.WriteLine("Desea agregar accesorios:");
+                        foreach (int acce in sucursales[eleccionsucursal].Accesorios.Keys) Console.WriteLine("\n(" + acce+") "+
+                            sucursales[eleccionsucursal].Accesorios[acce].Nombre+" Precio: "+ 
+                            sucursales[eleccionsucursal].Accesorios[acce].Precio);
+                        Console.WriteLine("\n("+ (sucursales[eleccionsucursal].Accesorios.Count+1) +") Continuar\n");
+                        decacce = VerifyInt(decacce);
+                        if(decacce<sucursales[eleccionsucursal].Accesorios.Count+1) acc.Add(sucursales[eleccionsucursal].Accesorios[decacce]); 
+                        else break;
+                    }
+                    Console.WriteLine("Ingrese fecha de termino contrato:\n");
+                    termino = DateTime.Parse(Console.ReadLine());
+                    resultadoarrendar=ArrendarVehiculo(rut, tipocliente, eleccionsucursal, decvehiculo, acc, termino);
+
+                    if (resultadoarrendar == 1) Console.WriteLine("No hay stock");
+                    if (resultadoarrendar == 2) Console.WriteLine("No tiene permiso para conducir el vehiculo requerido");
                 }
                 else break;
                 
