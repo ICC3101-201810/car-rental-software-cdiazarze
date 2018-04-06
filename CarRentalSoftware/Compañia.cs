@@ -88,13 +88,13 @@ namespace CarRentalSoftware
             if (sucursales[eleccionsucursal].Stockvehiculos[decvehiculo] < 1)
             {
                 ArriendoNoLogrado.Add(ArriendoNoLogrado.Count + 1, new Registro(cliente, sucursales[eleccionsucursal].Vehiculos[decvehiculo], sucursales[eleccionsucursal], acc, termino, sumatotal));
-                ArriendoNoLogrado[ArriendoNoLogrado.Count].Fallo = "No se arrienda por falta de stock.";
+                ArriendoNoLogrado[ArriendoNoLogrado.Count].Fallo = "No arrendado => No hay Stock";
                 return 1;
             }
             if (!cliente.Permisoconducir()[sucursales[eleccionsucursal].Vehiculos[decvehiculo].Tipo])
             { 
                 ArriendoNoLogrado.Add(ArriendoNoLogrado.Count + 1, new Registro(cliente, sucursales[eleccionsucursal].Vehiculos[decvehiculo], sucursales[eleccionsucursal], acc, termino, sumatotal));
-                ArriendoNoLogrado[ArriendoNoLogrado.Count].Fallo = "No se arrienda por falta de licencia para conducir.";
+                ArriendoNoLogrado[ArriendoNoLogrado.Count].Fallo = "No arrendado => Licencia";
                 return 2;
             }
 
@@ -296,8 +296,8 @@ namespace CarRentalSoftware
             int decvehiculo;
             DateTime termino;
             int resultadoarriendo;
-            int ultimoregistrohora=1;
             int accion; //accion 1=arrendar, accion=2 devolver.
+            int devueltos=0;
 
             Console.WriteLine("Creando sucursal inicial...");
             CrearSucursal();
@@ -311,8 +311,11 @@ namespace CarRentalSoftware
 
             while (hora < 21)
             {
-                llegadapersonas = random.Next(5, 12);
-                for(int numeropersona=1; numeropersona <= llegadapersonas; numeropersona++)
+                llegadapersonas = random.Next(5, 13);
+                Console.WriteLine($"{"\n"}{"++++++++++",10}{ "Hora: " + hora + ":00",6}{"++++++++++",10}{"\n"}");
+                Console.WriteLine($"{"Cliente",-30}{"|",1}{"Vehiculo",-25}{"|",1}{"Accesorios",-30}{"|",1}{"Inicio",-20}{"|",1}{"Termino",-20}{"|",1}{"Total",-6}{"|",1}{"Fallo",-15}");
+                Console.WriteLine($"{"------------------------------",-30}{" ",1}{"-------------------------",-20}{" ",1}{"------------------------------",-30}{" ",1}{"--------------------",-20}{" ",1}{"--------------------",-20}{" ",1}{"------",-6}{" ",1}{"---------------",-15}");
+                for (int numeropersona=1; numeropersona <= llegadapersonas; numeropersona++)
                 {
                     List<Accesorios> acc = new List<Accesorios>();
                     rut =random.Next(1000000, 20000000).ToString();
@@ -321,23 +324,53 @@ namespace CarRentalSoftware
                     termino = DateTime.Now.AddDays(random.Next(1,10));
                     int[] accesorios = { random.Next(1, 11), random.Next(1, 11), random.Next(1, 11), random.Next(1, 10), random.Next(1, 10), random.Next(1, 10) };
                     for (int i=0; i < 6; i++) if (accesorios[i] > 9) acc.Add(sucursales[eleccionsucursal].Accesorios[i + 1]);
-                    accion = random.Next(1, 3);
-                    if (accion == 1) resultadoarriendo = ArrendarVehiculo(rut, tipocliente, eleccionsucursal, decvehiculo, acc, termino);
-                    else sucursales[eleccionsucursal].RecibirVehiculo(sucursales[eleccionsucursal].Vehiculos[decvehiculo].Tipo);
+                    accion = random.Next(1, 11);
+                    if (accion <=8 )
+                    {
+                        resultadoarriendo = ArrendarVehiculo(rut, tipocliente, eleccionsucursal, decvehiculo, acc, termino);
+                        if (resultadoarriendo == 0) { System.Threading.Thread.Sleep(250); registros[registros.Count].ImprimirRegistroenlinea(); }
+                        else { System.Threading.Thread.Sleep(250); ArriendoNoLogrado[ArriendoNoLogrado.Count].ImprimirRegistroenlinea(); }
+                    }
+                    else
+                    {
+                        sucursales[eleccionsucursal].RecibirVehiculo(sucursales[eleccionsucursal].Vehiculos[decvehiculo].Tipo);
+                        devueltos += 1;
+                        Console.WriteLine($"{"Devolucion de vehiculo",-30}{"|",1}{sucursales[eleccionsucursal].Vehiculos[decvehiculo].Tipo+ " Stock:"+ sucursales[eleccionsucursal].Stockvehiculos[decvehiculo],-25}{"|",1}");
+                    }
                 }
                 //if (registros.Count > 0) for (int i = ultimoregistrohora; i <= registros.Count; i++) registros[i].Fecha = DateTime.Parse(hora.ToString());
                 //if (ArriendoNoLogrado.Count > 0) for (int i = ultimoregistrohora; i <= ArriendoNoLogrado.Count; i++) ArriendoNoLogrado[i].Fecha = DateTime.Parse(hora.ToString());
                 hora++;
             }
-            for (int i=1; i <= registros.Count; i++)
-            {
-                registros[i].ImprimirRegistroenlinea();
-            }
-            Console.WriteLine("Arriendos no logrados");
-            for (int i = 1; i <= ArriendoNoLogrado.Count; i++)
-            {
-                ArriendoNoLogrado[i].ImprimirRegistroenlinea();
-            }
+
+            Console.WriteLine($"{"\n\n"}{" ",30}{"Resultado del dia",17}{"\n"}");
+
+            string guion12 = "------------";
+            string guion10 = "----------";
+            string guion15 = "---------------";
+            string guion20 = "--------------------";
+
+            Console.WriteLine($"{guion12,-12}{"|",1}{guion10,-10}{"|",1}{guion10,-10}{"|",1}{guion10,-10}{"|",1}{guion10,-10}{"|",1}{guion15,-15}{"|",1}{guion10,-10}");
+            Console.WriteLine($"{"Stock Final",-12}{"|",1}{"Auto",-10}{"|",1}{"Camioneta",-10}{"|",1}{"Acuatico",-10}{"|",1}{"Bus",-10}{"|",1}{"Maquinaria",-15}{"|",1}{"Moto",-10}");
+            Console.WriteLine($"{" ",-12}{"|",1}{sucursales[eleccionsucursal].Stockvehiculos[1],-10}{"|",1}{sucursales[eleccionsucursal].Stockvehiculos[2],-10}{"|",1}{sucursales[eleccionsucursal].Stockvehiculos[3],-10}{"|",1}{sucursales[eleccionsucursal].Stockvehiculos[4],-10}{"|",1}{sucursales[eleccionsucursal].Stockvehiculos[5],-15}{"|",1}{sucursales[eleccionsucursal].Stockvehiculos[6],-10}");
+            Console.WriteLine($"{guion12,-12}{"|",1}{guion10,-10}{"|",1}{guion10,-10}{"|",1}{guion10,-10}{"|",1}{guion10,-10}{"|",1}{guion15,-15}{"|",1}{guion10,-10}");
+
+
+            Console.WriteLine($"{"\n\n"}{" ",1}{guion20,-20}{"|",1}{guion10,-10}");
+            Console.WriteLine($"{"|",1}{"Generales",-20}{"|",1}{"Resutado",-10}{"|",1}");
+            Console.WriteLine($"{"|",1}{guion20,-20}{"|",1}{guion10,-10}{"|",1}");
+            Console.WriteLine($"{"|",1}{"Total Arrendados",-20}{"|",1}{registros.Count,-10}{"|",1}");
+            Console.WriteLine($"{"|",1}{guion20,-20}{"|",1}{guion10,-10}{"|",1}");
+            Console.WriteLine($"{"|",1}{"Total Devueltos",-20}{"|",1}{devueltos,-10}{"|",1}");
+            Console.WriteLine($"{"|",1}{guion20,-20}{"|",1}{guion10,-10}{"|",1}");
+            Console.WriteLine($"{"|",1}{"Total No Arrendados",-20}{"|",1}{ArriendoNoLogrado.Count,-10}{"|",1}");
+            Console.WriteLine($"{"|",1}{guion20,-20}{"|",1}{guion10,-10}{"|",1}");
+            float sumadeldia = 0;
+            foreach (float reg in registros.Keys) sumadeldia += registros[reg].Totalprecio; 
+            Console.WriteLine($"{"|",1}{"Ganancia del dia",-20}{"|",1}{sumadeldia,-10}{"|",1}");
+            Console.WriteLine($"{"|",1}{guion20,-20}{"|",1}{guion10,-10}{"|",1}");
+
+
             Console.ReadLine();
             
             
