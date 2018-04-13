@@ -41,9 +41,16 @@ namespace CarRentalSoftware
             return false;
         }
 
-        public bool ComprarVehiculo(string tipo, float precioarriendo, int cantidad)
+        public bool ComprarVehiculo(string tipo, float precioarriendo, int cantidad, Random rand)
         {
-            vehiculos.Add(vehiculos.Count + 1, new Vehiculos(tipo, precioarriendo));
+
+            if (tipo.Equals("Auto")) vehiculos.Add(vehiculos.Count + 1, new Auto (tipo, precioarriendo,rand));
+            else if (tipo.Equals("Camioneta")) vehiculos.Add(vehiculos.Count + 1, new Camioneta(tipo, precioarriendo, rand));
+            else if (tipo.Equals("Camion")) vehiculos.Add(vehiculos.Count + 1, new Camion(tipo, precioarriendo, rand));
+            else if (tipo.Equals("Moto")) vehiculos.Add(vehiculos.Count + 1, new Moto(tipo, precioarriendo, rand));
+            else if (tipo.Equals("Acuatico")) vehiculos.Add(vehiculos.Count + 1, new Acuatico(tipo, precioarriendo, rand));
+            else if (tipo.Equals("MaquinariaPesada")) vehiculos.Add(vehiculos.Count + 1, new MaquinariaPesada(tipo, precioarriendo, rand));
+            else vehiculos.Add(vehiculos.Count + 1, new Bus(tipo, precioarriendo, rand));
             Stockvehiculos.Add(vehiculos.Count, cantidad);
             return true;
         }

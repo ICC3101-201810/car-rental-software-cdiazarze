@@ -8,13 +8,14 @@ namespace CarRentalSoftware
 {
     class Compañia
     {
-
+        
         Random random = new Random();
         Dictionary<float, Registro> registros = new Dictionary<float, Registro>();
         Dictionary<string, Cliente> clientes = new Dictionary<string, Cliente>();
         Dictionary<float, Sucursal> sucursales = new Dictionary<float, Sucursal>();
         Dictionary<float, Registro> ArriendoNoLogrado = new Dictionary<float, Registro>();
         Dictionary<float, string> vehiculossucursales = new Dictionary<float, string>
+        
         {
             {1,"Auto"},
             {2,"Moto"},
@@ -79,9 +80,10 @@ namespace CarRentalSoftware
             else
             {
                 if (tipocliente == 1) cliente = new Persona(rut, clientes.Count + 1, 1,random);
-                else cliente = new Agrupacion(rut, clientes.Count + 1, 2,random);
+                else if (tipocliente == 2) cliente = new Empresa(rut, clientes.Count + 1, 2,random);
+                else if (tipocliente == 3) cliente = new Institucion(rut, clientes.Count + 1, 2, random);
+                else  cliente = new Organizacion(rut, clientes.Count + 1, 2, random);
             }
-
             sumatotal += sucursales[eleccionsucursal].Vehiculos[decvehiculo].Precioarriendo;
             foreach (Accesorios accesorio in acc) sumatotal += accesorio.Precio;
 
@@ -97,12 +99,27 @@ namespace CarRentalSoftware
                 ArriendoNoLogrado[ArriendoNoLogrado.Count].Fallo = "No arrendado => Licencia";
                 return 2;
             }
+            if(cliente.Tipo!=1 && !cliente.Autorizaciones()[sucursales[eleccionsucursal].Vehiculos[decvehiculo].Tipo])
+            {
+                ArriendoNoLogrado.Add(ArriendoNoLogrado.Count + 1, new Registro(cliente, sucursales[eleccionsucursal].Vehiculos[decvehiculo], sucursales[eleccionsucursal], acc, termino, sumatotal));
+                ArriendoNoLogrado[ArriendoNoLogrado.Count].Fallo = "No arrendado => Autorizacion";
+                return 3;
+            }
 
         //Se realiza arriendo
         sucursales[eleccionsucursal].Stockvehiculos[decvehiculo] -= 1;
             registros.Add(registros.Count+1,new Registro(cliente, sucursales[eleccionsucursal].Vehiculos[decvehiculo],sucursales[eleccionsucursal], acc, termino,sumatotal));
             if (!existe) clientes.Add(rut, cliente);
             return 0;
+        }
+
+        public List<string> PoliticasDeArriendo(Cliente cliente, Vehiculos vehiculo) 
+        {
+           
+            if (cliente.GetType()==typeof(Persona)){
+                
+            }
+            return a;
         }
 
         public List<float> ArriendosdeCliente(Cliente cliente)
@@ -162,12 +179,12 @@ namespace CarRentalSoftware
             Console.WriteLine("Creando sucursal inicial...");
             CrearSucursal();
             Console.WriteLine("Agregando vehiculos...");
-            sucursales[1].ComprarVehiculo("Auto", 400,15);
-            sucursales[1].ComprarVehiculo("Camioneta", 500,18);
-            sucursales[1].ComprarVehiculo("Acuatico", 600,9);
-            sucursales[1].ComprarVehiculo("Bus", 800,4);
-            sucursales[1].ComprarVehiculo("MaquinariaPesada", 1000,3);
-            sucursales[1].ComprarVehiculo("Moto", 300,14);
+            sucursales[1].ComprarVehiculo("Auto", 400,15,random);
+            sucursales[1].ComprarVehiculo("Camioneta", 500,18,random);
+            sucursales[1].ComprarVehiculo("Acuatico", 600,9, random);
+            sucursales[1].ComprarVehiculo("Bus", 800,4, random);
+            sucursales[1].ComprarVehiculo("MaquinariaPesada", 1000,3, random);
+            sucursales[1].ComprarVehiculo("Moto", 300,14, random);
 
 
 
@@ -206,7 +223,7 @@ namespace CarRentalSoftware
                         precioarriendo = Verifyfloat(precioarriendo);
                         Console.WriteLine("Ingrese Cantidad comprada: ");
                         cantidad = VerifyInt(cantidad);
-                        sucursales[decision2].ComprarVehiculo(vehiculossucursales[id], precioarriendo,cantidad);
+                        sucursales[decision2].ComprarVehiculo(vehiculossucursales[id], precioarriendo,cantidad, random);
                     }
                 }
                 else if (decision0 == 4)
@@ -302,12 +319,12 @@ namespace CarRentalSoftware
             Console.WriteLine("Creando sucursal inicial...");
             CrearSucursal();
             Console.WriteLine("Agregando vehiculos...");
-            sucursales[1].ComprarVehiculo("Auto", 400, 15);
-            sucursales[1].ComprarVehiculo("Camioneta", 500, 18);
-            sucursales[1].ComprarVehiculo("Acuatico", 600, 9);
-            sucursales[1].ComprarVehiculo("Bus", 800, 4);
-            sucursales[1].ComprarVehiculo("MaquinariaPesada", 1000, 3);
-            sucursales[1].ComprarVehiculo("Moto", 300, 14);
+            sucursales[1].ComprarVehiculo("Auto", 400, 15, random);
+            sucursales[1].ComprarVehiculo("Camioneta", 500, 18, random);
+            sucursales[1].ComprarVehiculo("Acuatico", 600, 9, random);
+            sucursales[1].ComprarVehiculo("Bus", 800, 4, random);
+            sucursales[1].ComprarVehiculo("MaquinariaPesada", 1000, 3, random);
+            sucursales[1].ComprarVehiculo("Moto", 300, 14, random);
 
             while (hora < 21)
             {
@@ -319,7 +336,7 @@ namespace CarRentalSoftware
                 {
                     List<Accesorios> acc = new List<Accesorios>();
                     rut =random.Next(1000000, 20000000).ToString();
-                    tipocliente = random.Next(1, 3);
+                    tipocliente = random.Next(1, 5);
                     decvehiculo = random.Next(1, 7);
                     termino = DateTime.Now.AddDays(random.Next(1,10));
                     int[] accesorios = { random.Next(1, 11), random.Next(1, 11), random.Next(1, 11), random.Next(1, 10), random.Next(1, 10), random.Next(1, 10) };

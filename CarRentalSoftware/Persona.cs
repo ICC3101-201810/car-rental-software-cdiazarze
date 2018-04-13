@@ -11,24 +11,19 @@ namespace CarRentalSoftware
         //arreglos solo para generar nombres aleatorios de personas
         string[] nombres = { "Juan", "Carlos", "Claudio", "Diego", "Sebastian", "Andrea", "Maria", "Pedro", "Javier", "Cristobal", "Catalina", "Andres", "Elisa", "Gracia", "Alejandra" };
         string[] apellidos = { "Diaz", "Soto", "Gonzalez", "Errazuriz", "Alvear", "Jordan", "Fuentes", "Queteimporta", "Bond", "Amigo", "Lloron","Silva","Correa","Guasch","Recabarren" };
-        Dictionary<string, bool> licencia= new Dictionary<string, bool>();
+        //Dictionary<string, bool> licencia= new Dictionary<string, bool>();
 
         public Persona(string miRut, float miId, int miTipo, Random rand) : base(miRut, miId,miTipo, rand)
         {
 
             nombre = nombres[rand.Next(0, nombres.Length)]+" "+ apellidos[rand.Next(0, apellidos.Length)]; 
             edad = rand.Next(18, 80);
-            licencia.Add("Moto", (rand.NextDouble() >= 0.5));
-            licencia.Add("Auto", (rand.NextDouble() >= 0.5));
-            licencia.Add("Camioneta", (rand.NextDouble() >= 0.5));
-            licencia.Add("Camion", (rand.NextDouble() >= 0.5));
-            licencia.Add("MaquinariaPesada", (rand.NextDouble() >= 0.5));
-            licencia.Add("Bus", (rand.NextDouble() >= 0.5));
-            licencia.Add("Acuatico", (rand.NextDouble() >= 0.5));
+            licencia["MaquinariaPesada"]= false;
+            licencia["Bus"] = false;
 
         }
 
-        public override Dictionary<string, bool> Permisoconducir() { return licencia; }
+        //public override Dictionary<string, bool> Permisoconducir() { return licencia; }
         
     }
 }

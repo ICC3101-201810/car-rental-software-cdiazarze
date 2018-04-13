@@ -51,9 +51,10 @@ namespace CarRentalSoftware
         }
         public void ImprimirRegistroenlinea()
         {
-            string acce="";
-            foreach (Accesorios acc in accesorios) acce=acce+acc.Nombre + ",";
-            Console.WriteLine($"{cliente.Nombre,-30}{"|",1}{vehiculo.Tipo,-25}{"|",1}{acce,-30}{"|",1}{fecha,-20}{"|",1}{terminocontrato,-20}{"|",1}{totalprecio,-6}{"|",1}{fallo,-15}");
+            string acce = "";
+            foreach (Accesorios acc in accesorios) acce = acce + acc.Nombre + ",";
+            if (!vehiculo.Tipo.Equals("Bus")) Console.WriteLine($"{cliente.Nombre,-30}{"|",1}{vehiculo.Tipo,-25}{"|",1}{acce,-30}{"|",1}{fecha,-20}{"|",1}{terminocontrato,-20}{"|",1}{totalprecio,-6}{"|",1}{fallo,-15}");
+            else Console.WriteLine($"{cliente.Nombre+" ("+cliente.GetType().ToString().Substring(18)+")",-30}{"|",1}{vehiculo.Tipo+" ("+ vehiculo.Linea()+ ")",-25}{"|",1}{acce,-30}{"|",1}{fecha,-20}{"|",1}{terminocontrato,-20}{"|",1}{totalprecio,-6}{"|",1}{fallo,-15}");
         }
 
     }
