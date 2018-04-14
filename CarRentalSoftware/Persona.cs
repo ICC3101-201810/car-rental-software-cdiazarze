@@ -9,8 +9,8 @@ namespace CarRentalSoftware
     class Persona :Cliente
     {
         //arreglos solo para generar nombres aleatorios de personas
-        string[] nombres = { "Juan", "Carlos", "Claudio", "Diego", "Sebastian", "Andrea", "Maria", "Pedro", "Javier", "Cristobal", "Catalina", "Andres", "Elisa", "Gracia", "Alejandra" };
-        string[] apellidos = { "Diaz", "Soto", "Gonzalez", "Errazuriz", "Alvear", "Jordan", "Fuentes", "Queteimporta", "Bond", "Amigo", "Lloron","Silva","Correa","Guasch","Recabarren" };
+        string[] nombres = { "Juan", "Carlos", "Claudio", "Diego", "Matias", "Andrea", "Maria", "Pedro", "Javier", "Julio", "Alexis", "Andres", "Elisa", "Gracia", "Sofia" };
+        string[] apellidos = { "Diaz", "Soto", "Vazquez", "Silva", "Alvear", "Jordan", "Fuentes", "Mismo", "Bond", "Amigo", "Lloron","Sanchez","Correa","Guasch","Recabarren" };
         //Dictionary<string, bool> licencia= new Dictionary<string, bool>();
 
         public Persona(string miRut, float miId, int miTipo, Random rand) : base(miRut, miId,miTipo, rand)

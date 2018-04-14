@@ -8,8 +8,10 @@ namespace CarRentalSoftware
 {
     class MaquinariaPesada :Vehiculos
     {
-        public MaquinariaPesada(string miTipo, float miPrecioArriendo, Random miRand) : base(miTipo, miPrecioArriendo, miRand)
+        public MaquinariaPesada(string miTipo, float miPrecioArriendo) : base(miTipo, miPrecioArriendo)
         {
+            modelo_tipo = new List<string>(new string[] { "Unico" });
+            for (int j = 0; j < modelo_tipo.Count; j++) precioarriendo.Add(precioarr);
         }
     }
 }

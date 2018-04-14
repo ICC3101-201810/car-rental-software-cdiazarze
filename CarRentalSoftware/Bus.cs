@@ -8,10 +8,12 @@ namespace CarRentalSoftware
 {
     class Bus:Vehiculos
     {
-        string[] modelo_tipo = { "Liviano", "Normal", "Lujo" };
-        public Bus(string miTipo, float miPrecioArriendo, Random miRand) : base(miTipo, miPrecioArriendo, miRand)
+        
+        public Bus(string miTipo, float miPrecioArriendo) : base(miTipo, miPrecioArriendo)
         {
-            modelo = modelo_tipo[rand.Next(1, 4)-1];
+            modelo_tipo=new List<string>(new string[]{ "Liviano", "Normal", "Lujo" });
+            for (int j = 0; j < modelo_tipo.Count; j++) precioarriendo.Add(precioarr);
         }
+        public List<string> ModelosDisponibles() { return modelo_tipo; }
     }
 }

@@ -16,9 +16,10 @@ namespace CarRentalSoftware
         DateTime terminocontrato;
         float totalprecio;
         Sucursal sucursal;
+        int modelo;
         string fallo="Arrendado";
 
-        public Registro(Cliente miCliente, Vehiculos miVehiculo, Sucursal miSucursal, List<Accesorios> miAccesorios, DateTime miTerminoContrato, float miTotalPrecio)
+        public Registro(Cliente miCliente, Vehiculos miVehiculo, Sucursal miSucursal, List<Accesorios> miAccesorios, DateTime miTerminoContrato, float miTotalPrecio, int miModelo)
         {
             cliente = miCliente;
             vehiculo = miVehiculo;
@@ -27,6 +28,7 @@ namespace CarRentalSoftware
             fecha = DateTime.Now;
             terminocontrato = miTerminoContrato;
             totalprecio = miTotalPrecio;
+            modelo = miModelo;
         }
 
 
@@ -53,8 +55,8 @@ namespace CarRentalSoftware
         {
             string acce = "";
             foreach (Accesorios acc in accesorios) acce = acce + acc.Nombre + ",";
-            if (!vehiculo.Tipo.Equals("Bus")) Console.WriteLine($"{cliente.Nombre,-30}{"|",1}{vehiculo.Tipo,-25}{"|",1}{acce,-30}{"|",1}{fecha,-20}{"|",1}{terminocontrato,-20}{"|",1}{totalprecio,-6}{"|",1}{fallo,-15}");
-            else Console.WriteLine($"{cliente.Nombre+" ("+cliente.GetType().ToString().Substring(18)+")",-30}{"|",1}{vehiculo.Tipo+" ("+ vehiculo.Linea()+ ")",-25}{"|",1}{acce,-30}{"|",1}{fecha,-20}{"|",1}{terminocontrato,-20}{"|",1}{totalprecio,-6}{"|",1}{fallo,-15}");
+            Console.WriteLine($"{cliente.Nombre+" ("+ cliente.GetType().Name+")",-30}{"|",1}{vehiculo.Tipo+" ("+vehiculo.Modelo_Tipo()[modelo-1]+")",-30}{"|",1}{acce,-25}{"|",1}{fecha,-20}{"|",1}{terminocontrato,-20}{"|",1}{totalprecio,-6}{"|",1}{fallo,-15}");
+            
         }
 
     }

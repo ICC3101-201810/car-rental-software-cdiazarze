@@ -8,12 +8,13 @@ namespace CarRentalSoftware
 {
     class Program
     {
-        
+
         static void Main(string[] args)
         {
             Compañia c = new Compañia();
-            //c.programa();
-            c.Simulacion();
+            c.programa();
+            //c.Simulacion();
+
         }
     }
 }

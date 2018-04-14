@@ -8,7 +8,7 @@ namespace CarRentalSoftware
 {
     class Institucion : Agrupacion
     {
-        string[] nombres = { "Arauco", "ONU", "UNICEF", "Copec", "Don Pollo", "COANIQUEM", "NACIONAL", "Rebel Alliance", "Todos por un Ewok", "Corporation SA", "AS Inversions", "Panama Papers", "Ruby", "Gold Diamond", "Xerox S.A" };
+        string[] nombres = { "Arauco", "ONU", "UNICEF", "Copec", "Don Pollo", "COANIQUEM", "NACIONAL", "RebelAlliance", "EwokSA", "Corporation SA", "AS Inversions", "Panama Papers", "Ruby", "Gold Diamond", "Xerox S.A" };
 
 
         public Institucion(string miRut, float miId, int miTipo, Random rand) : base(miRut, miId, miTipo, rand)

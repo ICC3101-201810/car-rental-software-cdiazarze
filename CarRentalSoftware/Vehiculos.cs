@@ -9,18 +9,17 @@ namespace CarRentalSoftware
     public abstract class Vehiculos
     {
        protected string tipo;
-       protected float precioarriendo;
-       protected Random rand; 
-       protected string modelo; 
-
-        public Vehiculos(string miTipo, float miPrecioArriendo, Random miRand)
+       protected float precioarr;
+       protected List<float> precioarriendo;
+       protected List<string> modelo_tipo;
+        public Vehiculos(string miTipo, float miPrecioArr)
         {
             tipo = miTipo;
-            precioarriendo = miPrecioArriendo;
-            rand = miRand;
+            precioarr = miPrecioArr;
+            precioarriendo = new List<float>();
         }
-        public string Linea() { return modelo; }
         public string Tipo { get => tipo; set => tipo = value; }
-        public float Precioarriendo { get => precioarriendo; set => precioarriendo = value; }
+        public List<float> Precioarriendo { get => precioarriendo; set => precioarriendo = value; }
+        public List<string> Modelo_Tipo(){ return modelo_tipo; }
     }
 }
