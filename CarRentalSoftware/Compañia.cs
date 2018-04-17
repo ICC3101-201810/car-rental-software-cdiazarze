@@ -246,6 +246,7 @@ namespace CarRentalSoftware
                     CrearSucursal();
                     WriteSucces();
                     Console.WriteLine("\nSucursal creada con exito\n");
+                    Console.ResetColor();
                 }
                 else if (decision0 == 2)
                 {
