@@ -213,6 +213,20 @@ namespace CarRentalSoftware
             //Console.WriteLine("Sucursal incializada, ahora puede decidir que realizar a continuacion:\n");
             Console.WriteLine($"{"  ",-3}{"Bienvenido a la CarRentalSoftware 1.0",-30}");
             Console.WriteLine($"{"  ",-3}{guion30 + "\n",30}");
+
+            Console.WriteLine($"{"  ",-3}{"Simbologia" + "\n",-30}");
+            Console.BackgroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"{"  ",-3}Color verde => accion lograda");
+            Console.BackgroundColor = ConsoleColor.DarkRed;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"{"  ",-3}Color rojo => Error: no se completa la accion");
+            Console.BackgroundColor = ConsoleColor.DarkGray;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"{"  ",-3}Instruccion de la consola\n");
+            Console.ResetColor();
+
+
             while (true)
             {
                
@@ -230,53 +244,85 @@ namespace CarRentalSoftware
                 if (decision0 == 1)
                 {
                     CrearSucursal();
+                    WriteSucces();
+                    Console.WriteLine("\nSucursal creada con exito\n");
                 }
                 else if (decision0 == 2)
                 {
                     Console.WriteLine($"{"  ",-3}{"Menu: Revisar flota",-30}");
                     Console.WriteLine($"{"  ",-3}{guion30 + "\n",30}");
+                    WriteInstruction();
                     Console.WriteLine("Elegir sucursal a revisar flota:\n");
+                    Console.ResetColor();
                     decision2 = ElegirSucursal(decision2);
-                    if (decision2 <= sucursales.Count) sucursales[decision2].ImprimirFlota();
+                    if (decision2 <= sucursales.Count)
+                    {
+                        WriteSucces();
+                        Console.WriteLine("Flota:\n");
+                        Console.ResetColor();
+                        sucursales[decision2].ImprimirFlota();
+                    }   
                 }
                 else if (decision0 == 3)
                 {
                     Console.WriteLine($"{"  ",-3}{"Menu: Agregar Vehiculo",-30}");
                     Console.WriteLine($"{"  ",-3}{guion30 + "\n",30}");
+                    WriteInstruction();
                     Console.WriteLine("Elegir sucursal a agregar nuevo vehiculo:\n");
+                    Console.ResetColor();
                     decision2 = ElegirSucursal(decision2);
                     if (decision2 <= sucursales.Count)
                     {
                         sucursales[decision2].ImprimirFlota();
                         Console.WriteLine("Tipos posibles de vehiculos para agregar: \n");
                         foreach (float i in vehiculossucursales.Keys) Console.WriteLine("(" + i + ") " + vehiculossucursales[i]);
+                        WriteInstruction();
                         Console.WriteLine("Ingrese (id) Tipo que quiere agregar: ");
+                        Console.ResetColor();
                         id = VerifyInt(id);
                         if (sucursales[decision2].VerificarExistevehiculo(vehiculossucursales[id]))
                         {
+                            WriteInstruction();
                             Console.WriteLine("Ingrese (id) modelo de " + vehiculossucursales[id] + " que quiere agregar: ");
+                            Console.ResetColor();
                             sucursales[decision2].PrintVehiclesModels(vehiculossucursales[id]);
                             modelo = VerifyInt(modelo);
                             if (sucursales[decision2].ExistVehicleModel(vehiculossucursales[id], modelo)) Console.WriteLine("\n  ERROR:Vehiculo ya existe en la flota. Debe seleccionar Incrementar Flota Actual\n");
                             else
                             {
+                                WriteInstruction();
                                 Console.WriteLine("Ingrese Precio de arriendo: ");
+                                Console.ResetColor();
                                 precioarriendo = Verifyfloat(precioarriendo);
+                                WriteInstruction();
                                 Console.WriteLine("Ingrese Cantidad comprada: ");
+                                Console.ResetColor();
                                 cantidad = VerifyInt(cantidad);
                                 sucursales[decision2].ComprarVehiculo(vehiculossucursales[id], precioarriendo, cantidad, modelo);
+                                WriteSucces();
+                                Console.WriteLine("Vehiculo agregado con exito\n");
+                                Console.ResetColor();
                             }
                         }
                         else
                         {
+                            WriteInstruction();
                             Console.WriteLine("Ingrese (id) modelo de " + vehiculossucursales[id] + "que quiere agregar: ");
+                            Console.ResetColor();
                             sucursales[decision2].PrintVehiclesModels(vehiculossucursales[id]);
                             modelo = VerifyInt(modelo);
+                            WriteInstruction();
                             Console.WriteLine("Ingrese Precio de arriendo: ");
+                            Console.ResetColor();
                             precioarriendo = Verifyfloat(precioarriendo);
+                            WriteInstruction();
                             Console.WriteLine("Ingrese Cantidad comprada: ");
+                            Console.ResetColor();
                             cantidad = VerifyInt(cantidad);
                             sucursales[decision2].ComprarVehiculo(vehiculossucursales[id], precioarriendo, cantidad, modelo);
+                            WriteSucces();
+                            Console.WriteLine("Vehiculo agregado con exito\n");
+                            Console.ResetColor();
                         }
                     }
                 }
@@ -289,19 +335,33 @@ namespace CarRentalSoftware
                     decision2 = VerifyInt(decision2);
                     if (decision2 <= sucursales.Count) { 
                         Console.WriteLine("Sucursal " + sucursales[decision2].Id + ":\n");
-                        if (sucursales[decision2].Vehiculos.Count < 1) Console.WriteLine("Esta sucursal aun no posee flota\n");
+                        if (sucursales[decision2].Vehiculos.Count < 1)
+                        {
+                            Writeerror();
+                            Console.WriteLine("\nERROR: Esta sucursal aun no posee flota\n");
+                            Console.ResetColor();
+                        }
                         else
                         {
                             sucursales[decision2].ImprimirFlota();
+                            WriteInstruction();
                             Console.WriteLine("Ingrese (id) Tipo: ");
+                            Console.ResetColor();
                             id = VerifyInt(id);
                             tipo = sucursales[decision2].Vehiculos[id].Tipo;
+                            WriteInstruction();
                             Console.WriteLine("Ingrese (id) modelo de " + tipo + "que quiere agregar: ");
+                            Console.ResetColor();
                             sucursales[decision2].PrintVehiclesModels(tipo);
                             modelo = VerifyInt(modelo);
+                            WriteInstruction();
                             Console.WriteLine("Ingrese Cantidad comprada: ");
+                            Console.ResetColor();
                             cantidad = VerifyInt(cantidad);
                             sucursales[decision2].AumentarFlota(tipo, cantidad, modelo);
+                            WriteSucces();
+                            Console.WriteLine("\n Incremento de flota logrado con exito\n");
+                            Console.ResetColor();
                             Console.WriteLine("Nuevo Inventario:\n");
                             sucursales[decision2].ImprimirFlota();
                         }
@@ -311,26 +371,43 @@ namespace CarRentalSoftware
                 {
                     Console.WriteLine($"{"  ",-3}{"Menu: Actualizar precios de arriendo",-30}");
                     Console.WriteLine($"{"  ",-3}{guion30 + "\n",30}");
+                    WriteInstruction();
                     Console.WriteLine("Elegir sucursal a actualizar precios:\n");
+                    Console.ResetColor();
                     ImprimirSucursales();
                     decision2 = VerifyInt(decision2);
                     if (decision2 <= sucursales.Count)
                     {
                         Console.WriteLine("Sucursal " + sucursales[decision2].Id + ":\n");
-                        if (sucursales[decision2].Vehiculos.Count < 1) Console.WriteLine("Esta sucursal aun no posee flota\n");
+                        if (sucursales[decision2].Vehiculos.Count < 1)
+                        {
+                            Writeerror();
+                            Console.WriteLine("\nERROR: Esta sucursal aun no posee flota\n");
+                            Console.ResetColor();
+                        }
+
                         else
                         {
                             sucursales[decision2].ImprimirFlota();
+                            WriteInstruction();
                             Console.WriteLine("Ingrese (id) Tipo: ");
+                            Console.ResetColor();
                             id = VerifyInt(id);
                             tipo = sucursales[decision2].Vehiculos[id].Tipo;
+                            WriteInstruction();
                             Console.WriteLine("Ingrese (id) modelo de " + tipo + " que quiere actulizar precio: ");
+                            Console.ResetColor();
                             sucursales[decision2].PrintVehiclesModels(tipo);
                             modelo = VerifyInt(modelo);
-                            Console.WriteLine("Precio Actual de " + tipo + " (" + sucursales[decision2].Vehiculos[id].Modelo_Tipo()[modelo - 1] + "): " + sucursales[decision2].Vehiculos[id].Precioarriendo[modelo - 1]);
+                            Console.WriteLine("\nPrecio Actual de " + tipo + " (" + sucursales[decision2].Vehiculos[id].Modelo_Tipo()[modelo - 1] + "): " + sucursales[decision2].Vehiculos[id].Precioarriendo[modelo - 1]);
+                            WriteInstruction();
                             Console.WriteLine("Ingrese Nuevo Precio: ");
+                            Console.ResetColor();
                             precio = Verifyfloat(precio);
                             sucursales[decision2].SetVehiclePrice(tipo, modelo, precio);
+                            WriteSucces();
+                            Console.WriteLine("\n Cambio de Precio logrado con exito\n");
+                            Console.ResetColor();
 
                         }
                     }
@@ -340,7 +417,9 @@ namespace CarRentalSoftware
                     Console.WriteLine($"{"  ",-3}{"Menu: Gestion de Arriendo",-30}");
                     Console.WriteLine($"{"  ",-3}{guion30 + "\n",30}");
                     List<Accesorios> acc = new List<Accesorios>();
+                    WriteInstruction();
                     Console.WriteLine("Ingrese rut de cliente\n");
+                    Console.ResetColor();
                     rut = Console.ReadLine();
                     if (clientes.ContainsKey(rut))
                     {
@@ -349,17 +428,26 @@ namespace CarRentalSoftware
                     }
                     else
                     {
-                        Console.WriteLine("\nCliente no existe en sistema. Es Persona Natural o representa Agrupacion:\n (1) Persona Natural\n (2) Empresa\n (3) Institucion\n (4) Organizacion\n");
+                        WriteInstruction();
+                        Console.WriteLine("\nCliente no existe en sistema. Es Persona Natural o representa Agrupacion:");
+                        Console.ResetColor();
+                        Console.WriteLine("\n (1) Persona Natural\n (2) Empresa\n (3) Institucion\n (4) Organizacion\n");
                         tipocliente = VerifyInt(tipocliente);
                     }
+                    WriteInstruction();
                     Console.WriteLine("Ingrese sucursal donde arrendar vehiculo:\n");
+                    Console.ResetColor();
                     eleccionsucursal = ElegirSucursal(eleccionsucursal);
                     if (eleccionsucursal <= sucursales.Count)
                     {
                         sucursales[eleccionsucursal].ImprimirFlota();
+                        WriteInstruction();
                         Console.WriteLine("Seleccione vehiculo a arrendar:");
+                        Console.ResetColor();
                         decvehiculo = VerifyInt(decvehiculo);
+                        WriteInstruction();
                         Console.WriteLine("Seleccionar Modelo de Vehiculo:");
+                        Console.ResetColor();
                         //sucursales[eleccionsucursal].PrintVehiclesModels(sucursales[eleccionsucursal].Vehiculos[decvehiculo].Tipo);
                         if ((PoliticasDeArriendo(tipocliente).Count > 0) && PoliticasDeArriendo(tipocliente).ContainsKey(sucursales[eleccionsucursal].Vehiculos[decvehiculo].Tipo))
                         {
@@ -376,7 +464,9 @@ namespace CarRentalSoftware
                         modelo = VerifyInt(modelo);
                         while (true)
                         {
+                            WriteInstruction();
                             Console.WriteLine("Desea agregar accesorios:");
+                            Console.ResetColor();
                             foreach (int acce in sucursales[eleccionsucursal].Accesorios.Keys) Console.WriteLine("(" + acce + ") " +
                                 sucursales[eleccionsucursal].Accesorios[acce].Nombre + " Precio: " +
                                 sucursales[eleccionsucursal].Accesorios[acce].Precio);
@@ -385,38 +475,56 @@ namespace CarRentalSoftware
                             if (decacce < sucursales[eleccionsucursal].Accesorios.Count + 1)
                             {
                                 acc.Add(sucursales[eleccionsucursal].Accesorios[decacce]);
+                                WriteSucces();
                                 Console.WriteLine("Accesorio agregado\n");
+                                Console.ResetColor();
                             }
                             else break;
                         }
+                        WriteInstruction();
                         Console.WriteLine("Ingrese fecha de termino contrato (dd-mm-yy):\n");
+                        Console.ResetColor();
                         termino = DateTime.Parse(Console.ReadLine());
                         resultadoarrendar = ArrendarVehiculo(rut, tipocliente, eleccionsucursal, decvehiculo, acc, termino, modelo);
                         if (resultadoarrendar == 0)
                         {
-                            Console.WriteLine("Arriendo Completado, queda Registro" + registros.Count + ":\n");
+                            WriteSucces();
+                            Console.WriteLine("Arriendo Completado, queda Registro " + registros.Count + ":\n");
+                            Console.ResetColor();
                             registros[registros.Count].ImprimirRegistro();
                         }
+                        Writeerror();
                         if (resultadoarrendar == 1) Console.WriteLine("Error: No Arrendado => Stock\n");
                         if (resultadoarrendar == 2) Console.WriteLine("Error: No Arrendado => Licencia\n");
                         if (resultadoarrendar == 3) Console.WriteLine("Error: No Arrendado => Autorizacion\n");
+                        Console.ResetColor();
                     }
                 }
                 else if (decision0 == 7)
                 {
                     Console.WriteLine($"{"  ",-3}{"Menu: Recepcion de Vehiculo",-30}");
                     Console.WriteLine($"{"  ",-3}{guion30 + "\n",30}");
+                    WriteInstruction();
                     Console.WriteLine("Elegir sucursal a devolver vehiculo:\n");
+                    Console.ResetColor();
                     decision2 = ElegirSucursal(decision2);
+                    WriteInstruction();
                     Console.WriteLine("Elegir vehiculo a devolver: \n");
+                    Console.ResetColor();
                     foreach (float i in vehiculossucursales.Keys) Console.WriteLine("(" + i + ") " + vehiculossucursales[i]);
+                    WriteInstruction();
                     Console.WriteLine("Ingrese (id) Tipo que quiere agregar: ");
+                    Console.ResetColor();
                     id = VerifyInt(id);
+                    WriteInstruction();
                     Console.WriteLine("Seleccionar Modelo de Vehiculo:");
+                    Console.ResetColor();
                     sucursales[decision2].PrintVehiclesModels(sucursales[decision2].Vehiculos[sucursales[decision2].GetIndexVehicle(vehiculossucursales[id])].Tipo);
                     modelo = VerifyInt(modelo);
                     sucursales[decision2].RecibirVehiculo(vehiculossucursales[id], modelo);
+                    WriteSucces();
                     Console.WriteLine("\nVehiculo correctamente recepcionado\n");
+                    Console.ResetColor();
                 }
                 else if (decision0 == 8) break;
 
@@ -533,6 +641,24 @@ namespace CarRentalSoftware
                 else break;
             }
             return numberout;
+        }
+        public void Writeerror()
+        {
+            Console.BackgroundColor = ConsoleColor.DarkRed;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Beep();
+            Console.Beep();
+        }
+        public void WriteSucces()
+        {
+            Console.BackgroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Beep();
+        }
+        public void WriteInstruction()
+        {
+            Console.BackgroundColor = ConsoleColor.DarkGray;
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }
