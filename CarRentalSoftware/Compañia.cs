@@ -39,12 +39,12 @@ namespace CarRentalSoftware
             else
             {
                 sucursales.Add(sucursales.Count + 1, new Sucursal(sucursales.Count + 1));
-                sucursales[sucursales.Count].Vehiculos = sucursales[sucursales.Count - 1].Vehiculos;
-                sucursales[sucursales.Count].Stockvehiculos2= sucursales[sucursales.Count - 1].Stockvehiculos2;
-                for (int i=1; i<= sucursales[sucursales.Count].Stockvehiculos2.Count; i++)
-                {
-                    for (int j = 0; j < sucursales[sucursales.Count].Stockvehiculos2[i].Count; j++) sucursales[sucursales.Count].Stockvehiculos2[i][j] = 0;
-                }
+                foreach (float i in sucursales[sucursales.Count-1].Vehiculos.Keys) sucursales[sucursales.Count].ComprarVehiculo(sucursales[sucursales.Count-1].Vehiculos[i].Tipo,0,0,1);
+                //sucursales[sucursales.Count].Stockvehiculos2= sucursales[sucursales.Count - 1].Stockvehiculos2;
+                //for (int i=1; i<= sucursales[sucursales.Count].Stockvehiculos2.Count; i++)
+                //{
+                //    for (int j = 0; j < sucursales[sucursales.Count].Stockvehiculos2[i].Count; j++) sucursales[sucursales.Count].Stockvehiculos2[i][j] = 0;
+                //}
             }
             Console.WriteLine("Sucursal Id:" + sucursales.Count + " creada.\n");
         }
